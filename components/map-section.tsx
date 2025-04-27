@@ -1,83 +1,137 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import mapboxgl from "mapbox-gl"
 import "mapbox-gl/dist/mapbox-gl.css"
+
+// Fallback static map component when token isn't available
+function StaticMap() {
+  return (
+    <div className="h-[500px] w-full flex flex-col items-center justify-center bg-gray-100 p-6">
+      <div className="text-xl font-bold text-texas-blue mb-4">McKinney, TX Service Area</div>
+      <div className="text-gray-600 text-center max-w-md">
+        We proudly serve McKinney and surrounding areas including Frisco, Plano, Allen, and Richardson.
+      </div>
+      <div className="mt-4 p-4 bg-white rounded-lg shadow-md">
+        <p className="text-gray-700">
+          <strong>Address:</strong> 123 Main Street, McKinney, TX 75070
+        </p>
+      </div>
+    </div>
+  )
+}
 
 export default function MapSection() {
   const mapContainer = useRef<HTMLDivElement>(null)
   const map = useRef<mapboxgl.Map | null>(null)
+  const [mapboxToken, setMapboxToken] = useState<string>("")
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
+  // Fetch the Mapbox token from our secure API route
   useEffect(() => {
-    if (!mapContainer.current) return
+    async function fetchMapboxToken() {
+      try {
+        const response = await fetch("/api/mapbox-token")
 
-    // Replace with your Mapbox access token
-    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || "your-mapbox-token"
+        if (!response.ok) {
+          throw new Error(`Failed to fetch Mapbox token: ${response.status}`)
+        }
+
+        const data = await response.json()
+
+        if (!data.token) {
+          throw new Error("No token returned from API")
+        }
+
+        setMapboxToken(data.token)
+        setIsLoading(false)
+      } catch (error) {
+        console.error("Error fetching Mapbox token:", error)
+        setError(error instanceof Error ? error.message : "Unknown error")
+        setIsLoading(false)
+      }
+    }
+
+    fetchMapboxToken()
+  }, [])
+
+  // Initialize the map once we have the token
+  useEffect(() => {
+    if (!mapContainer.current || !mapboxToken || isLoading || error) return
 
     if (map.current) return
 
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: "mapbox://styles/mapbox/streets-v11",
-      center: [-96.6389, 33.1972], // McKinney, TX coordinates
-      zoom: 10,
-    })
+    try {
+      // Set the access token directly on mapboxgl
+      mapboxgl.accessToken = mapboxToken
 
-    // Add navigation controls
-    map.current.addControl(new mapboxgl.NavigationControl())
+      map.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: "mapbox://styles/mapbox/streets-v11",
+        center: [-96.6389, 33.1972], // McKinney, TX coordinates
+        zoom: 10,
+      })
 
-    // Add marker for business location
-    new mapboxgl.Marker({ color: "#FF7A00" })
-      .setLngLat([-96.6389, 33.1972])
-      .setPopup(new mapboxgl.Popup().setHTML("<h3>DUCTWARRIORS</h3><p>McKinney, TX</p>"))
-      .addTo(map.current)
+      // Add navigation controls
+      map.current.addControl(new mapboxgl.NavigationControl())
 
-    // Add service area overlay
-    map.current.on("load", () => {
-      if (!map.current) return
+      // Add marker for business location
+      new mapboxgl.Marker({ color: "#FF7A00" })
+        .setLngLat([-96.6389, 33.1972])
+        .setPopup(new mapboxgl.Popup().setHTML("<h3>DUCTWARRIORS</h3><p>McKinney, TX</p>"))
+        .addTo(map.current)
 
-      map.current.addSource("service-area", {
-        type: "geojson",
-        data: {
-          type: "Feature",
-          properties: {},
-          geometry: {
-            type: "Polygon",
-            coordinates: [
-              [
-                [-96.8389, 33.3972], // Expanded area around McKinney
-                [-96.4389, 33.3972],
-                [-96.4389, 32.9972],
-                [-96.8389, 32.9972],
-                [-96.8389, 33.3972],
+      // Add service area overlay
+      map.current.on("load", () => {
+        if (!map.current) return
+
+        map.current.addSource("service-area", {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "Polygon",
+              coordinates: [
+                [
+                  [-96.8389, 33.3972], // Expanded area around McKinney
+                  [-96.4389, 33.3972],
+                  [-96.4389, 32.9972],
+                  [-96.8389, 32.9972],
+                  [-96.8389, 33.3972],
+                ],
               ],
-            ],
+            },
           },
-        },
-      })
+        })
 
-      map.current.addLayer({
-        id: "service-area-fill",
-        type: "fill",
-        source: "service-area",
-        layout: {},
-        paint: {
-          "fill-color": "#FF7A00",
-          "fill-opacity": 0.2,
-        },
-      })
+        map.current.addLayer({
+          id: "service-area-fill",
+          type: "fill",
+          source: "service-area",
+          layout: {},
+          paint: {
+            "fill-color": "#FF7A00",
+            "fill-opacity": 0.2,
+          },
+        })
 
-      map.current.addLayer({
-        id: "service-area-outline",
-        type: "line",
-        source: "service-area",
-        layout: {},
-        paint: {
-          "line-color": "#FF7A00",
-          "line-width": 2,
-        },
+        map.current.addLayer({
+          id: "service-area-outline",
+          type: "line",
+          source: "service-area",
+          layout: {},
+          paint: {
+            "line-color": "#FF7A00",
+            "line-width": 2,
+          },
+        })
       })
-    })
+    } catch (err) {
+      console.error("Error initializing map:", err)
+      setError(err instanceof Error ? err.message : "Failed to initialize map")
+    }
 
     return () => {
       if (map.current) {
@@ -85,7 +139,7 @@ export default function MapSection() {
         map.current = null
       }
     }
-  }, [])
+  }, [mapboxToken, isLoading, error])
 
   return (
     <section className="py-20 bg-texas-cream">
@@ -98,7 +152,15 @@ export default function MapSection() {
         </div>
 
         <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
-          <div ref={mapContainer} className="h-[500px] w-full" />
+          {isLoading ? (
+            <div className="h-[500px] w-full flex items-center justify-center bg-gray-100">
+              <div className="text-lg text-gray-600">Loading map...</div>
+            </div>
+          ) : error || !mapboxToken ? (
+            <StaticMap />
+          ) : (
+            <div ref={mapContainer} className="h-[500px] w-full" />
+          )}
         </div>
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">

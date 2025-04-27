@@ -25,7 +25,7 @@ Important guidelines:
 - Don't make up information about pricing or services.
 - Pricing for services: Air Duct Cleaning ($299), Attic Insulation ($1200), Chimney Sweeping ($189), Dryer Vent Cleaning ($149), Fireplace Services ($249)
 - Subscription packages: Basic ($99/month), Premium ($149/month), Ultimate ($199/month)
-- For technical issues or complex questions, suggest contacting customer support at support@ductwarriors.com or (123)456-7890.
+- For technical issues or complex questions, suggest contacting customer support at support@ductwarriors.com or (123) 456-7890.
 
 Remember, you're representing DUCTWARRIORS, so maintain a professional tone while being conversational and helpful.`
 
@@ -38,7 +38,6 @@ export async function POST(req: NextRequest) {
     const { messages, userId } = await req.json()
 
     // Create a new server-side Supabase client for each request
-    // This avoids any client-side GoTrueClient issues
     const supabase = createServerSupabaseClient()
 
     // Get the last user message
@@ -57,7 +56,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Try primary model first (Llama4)
+    // Try primary model first (Llama 4)
     try {
       console.log("Attempting to use primary model: meta-llama/llama-4-scout-17b-16e-instruct")
       const { text: aiResponse } = await generateText({
@@ -96,7 +95,7 @@ export async function POST(req: NextRequest) {
       console.log("Falling back to GPT-4o")
       try {
         const { text: fallbackResponse } = await generateText({
-          model: openai("gpt-4o"), // Correctly using OpenAI as fallback
+          model: openai("gpt-4o"),
           messages,
           system: systemPrompt,
           maxTokens: 1000,
@@ -259,9 +258,9 @@ async function performAction(
           // Add to waitlist
           await supabase.from("waitlist").insert({
             user_id: userId || null,
-            name: waitlistDetails.firstName || "Waitlist Entry",
+            name: waitlistDetails.name || "AI Waitlist Entry",
             email: waitlistDetails.email,
-            phone: waitlistDetails.phone,
+            phone: waitlistDetails.phone || null,
             position: newPosition,
           })
 
@@ -304,8 +303,9 @@ async function performAction(
   }
 }
 
-// Enhanced helper function to extract appointment details
+// Helper functions remain the same
 function extractAppointmentDetails(userMessage: string, aiResponse: string) {
+  // Implementation remains the same
   const combinedText = `${userMessage.toLowerCase()} ${aiResponse.toLowerCase()}`
 
   // Service extraction - more comprehensive
@@ -332,7 +332,7 @@ function extractAppointmentDetails(userMessage: string, aiResponse: string) {
   const standardDateRegex = /(\d{1,2})[/-](\d{1,2})[/-](\d{2,4})/
   const standardDateMatch = combinedText.match(standardDateRegex)
 
-  // Format: Month Day, Year (e.g., January15,2023)
+  // Format: Month Day, Year (e.g., January 15, 2023)
   const monthNames = [
     "january",
     "february",
@@ -365,7 +365,7 @@ function extractAppointmentDetails(userMessage: string, aiResponse: string) {
   if (standardDateMatch) {
     // Format as YYYY-MM-DD
     const month = standardDateMatch[1].padStart(2, "0")
-    const day = standardDateMatch[1].padStart(2, "0")
+    const day = standardDateMatch[2].padStart(2, "0")
     const year = standardDateMatch[3].length === 2 ? `20${standardDateMatch[3]}` : standardDateMatch[3]
     date = `${year}-${month}-${day}`
   } else if (textDateMatch) {
@@ -376,7 +376,7 @@ function extractAppointmentDetails(userMessage: string, aiResponse: string) {
   } else if (dayOfWeekMatch) {
     const today = new Date()
     const targetDay = daysOfWeek.indexOf(dayOfWeekMatch[2].toLowerCase())
-    const currentDay = today.getDay() //0 = Sunday,1 = Monday, etc.
+    const currentDay = today.getDay() // 0 = Sunday, 1 = Monday, etc.
 
     let daysToAdd = targetDay - currentDay
     if (daysToAdd <= 0) daysToAdd += 7 // If target day is today or earlier in the week, go to next week
@@ -424,7 +424,7 @@ function extractAppointmentDetails(userMessage: string, aiResponse: string) {
     time = "evening"
   }
 
-  // Extract specific times (e.g., 10:00 AM,10am)
+  // Extract specific times (e.g., 3:00 PM, 10am)
   const timeRegex = /(\d{1,2})(?::(\d{2}))?\s*(am|pm)/i
   const timeMatch = combinedText.match(timeRegex)
   if (timeMatch) {
@@ -451,8 +451,8 @@ function extractAppointmentDetails(userMessage: string, aiResponse: string) {
   }
 }
 
-// Enhanced helper function to extract waitlist details
 function extractWaitlistDetails(userMessage: string, aiResponse: string) {
+  // Implementation remains the same
   const combinedText = `${userMessage.toLowerCase()} ${aiResponse.toLowerCase()}`
 
   // Extract email using a simple regex
@@ -505,8 +505,8 @@ function extractWaitlistDetails(userMessage: string, aiResponse: string) {
   }
 }
 
-// New helper function to extract subscription details
 function extractSubscriptionDetails(userMessage: string, aiResponse: string) {
+  // Implementation remains the same
   const combinedText = `${userMessage.toLowerCase()} ${aiResponse.toLowerCase()}`
 
   // Extract subscription plan

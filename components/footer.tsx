@@ -1,7 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Phone, Mail, MapPin, Clock, Facebook, Twitter, Instagram } from "lucide-react"
-import WeatherCard from "./weather-card"
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -131,12 +130,6 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-        </div>
-
-        {/* Weather Card */}
-        <div className="mt-12 pt-8">
-          <h3 className="text-xl font-bold mb-6 text-center">Current Weather</h3>
-          <WeatherCard />
         </div>
 
         <div className="border-t border-gray-700 mt-12 pt-8 text-center">

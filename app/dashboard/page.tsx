@@ -8,7 +8,6 @@ import { Calendar, Clock, FileText, Home, Settings, User, LogOut, Bell } from "l
 import { createClientSupabaseClient } from "@/lib/supabase/client"
 import { useAuth } from "@/context/auth-context"
 import ServiceRequestForm from "@/components/service-request-form"
-import WeatherWidget from "@/components/weather-widget"
 import type { Database } from "@/types/supabase"
 
 type Service = Database["public"]["Tables"]["services"]["Row"]
@@ -177,7 +176,7 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                     <div className="bg-texas-cream rounded-xl p-6 shadow-md">
                       <h3 className="text-lg font-bold text-texas-blue mb-2">Next Appointment</h3>
                       {appointments.length > 0 ? (
@@ -200,8 +199,6 @@ export default function Dashboard() {
                         <p className="text-gray-700">No upcoming appointments</p>
                       )}
                     </div>
-
-                    <WeatherWidget city="McKinney" state="TX" />
 
                     <div className="bg-texas-cream rounded-xl p-6 shadow-md">
                       <h3 className="text-lg font-bold text-texas-blue mb-2">Waitlist Position</h3>

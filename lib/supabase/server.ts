@@ -1,6 +1,6 @@
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
-import type { Database } from "@/types/supabase"
+import type { Database } from "@/types/database"
 
 export function createServerSupabaseClient() {
   const cookieStore = cookies()
@@ -8,32 +8,25 @@ export function createServerSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error("Supabase URL and anon key must be defined")
-  }
-
   return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
     cookies: {
       get(name: string) {
         return cookieStore.get(name)?.value
       },
-      set(
-        name: string,
-        value: string,
-        options: { path: string; maxAge: number; domain?: string; sameSite?: string; secure?: boolean },
-      ) {
+      set(name: string, value: string, options: { path: string; maxAge: number; domain?: string }) {
         try {
           cookieStore.set({ name, value, ...options })
         } catch (error) {
-          // This can happen in middleware or other contexts where cookies are read-only
-          console.warn("Warning: Could not set cookie", error)
+          // Handle cookie setting errors
+          console.error("Error setting cookie:", error)
         }
       },
-      remove(name: string, options: { path: string; domain?: string; sameSite?: string; secure?: boolean }) {
+      remove(name: string, options: { path: string; domain?: string }) {
         try {
           cookieStore.set({ name, value: "", ...options, maxAge: 0 })
         } catch (error) {
-          console.warn("Warning: Could not remove cookie", error)
+          // Handle cookie removal errors
+          console.error("Error removing cookie:", error)
         }
       },
     },
