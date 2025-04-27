@@ -28,6 +28,7 @@ export default function Header() {
             <NavLink href="/services">Services</NavLink>
             <NavLink href="/pricing">Pricing</NavLink>
             <NavLink href="/about">About</NavLink>
+            <NavLink href="/waitlist">Waitlist</NavLink>
             <NavLink href="/contact">Contact</NavLink>
           </nav>
 
@@ -105,6 +106,9 @@ export default function Header() {
               </MobileNavLink>
               <MobileNavLink href="/contact" onClick={() => setIsMenuOpen(false)}>
                 Contact
+              </MobileNavLink>
+              <MobileNavLink href="/waitlist" onClick={() => setIsMenuOpen(false)}>
+                Waitlist
               </MobileNavLink>
               <div className="pt-4 border-t border-gray-200">
                 <a

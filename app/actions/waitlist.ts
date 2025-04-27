@@ -47,8 +47,6 @@ export async function joinWaitlist(formData: FormData) {
         user_id: userId || null,
         name: `${firstName} ${lastName}`,
         email,
-        phone: (formData.get("phone") as string) || null,
-        address: "",
         position: newPosition,
       })
       .select()
@@ -67,6 +65,7 @@ export async function joinWaitlist(formData: FormData) {
     )
 
     revalidatePath("/")
+    revalidatePath("/waitlist")
 
     return {
       success: true,
@@ -93,7 +92,11 @@ export async function bumpWaitlistPosition(
     const supabase = createServerSupabaseClient()
 
     // Get current position
-    const { data: waitlistEntry } = await supabase.from("waitlist").select("position").eq("id", waitlistId).single()
+    const { data: waitlistEntry } = await supabase
+      .from("waitlist")
+      .select("position, user_id")
+      .eq("id", waitlistId)
+      .single()
 
     if (!waitlistEntry) {
       return {
@@ -102,27 +105,25 @@ export async function bumpWaitlistPosition(
       }
     }
 
+    // Calculate new position
     const newPosition = Math.max(1, waitlistEntry.position - positionsToMove)
 
-    // Update position
-    const { error: updateError } = await supabase
-      .from("waitlist")
-      .update({ position: newPosition })
-      .eq("id", waitlistId)
-
-    if (updateError) throw updateError
-
-    // Record the bump
-    const { error: bumpError } = await supabase.from("waitlist_bumps").insert({
-      waitlist_id: waitlistId,
-      amount_paid: amountPaid,
-      positions_moved: positionsToMove,
-      payment_id: paymentId,
+    // Call the stored procedure to handle the transaction
+    const { error } = await supabase.rpc("bump_waitlist_position", {
+      p_waitlist_id: waitlistId,
+      p_new_position: newPosition,
+      p_payment_id: paymentId,
+      p_amount_paid: amountPaid,
+      p_positions_moved: positionsToMove,
     })
 
-    if (bumpError) throw bumpError
+    if (error) {
+      console.error("Error calling bump_waitlist_position:", error)
+      throw error
+    }
 
     revalidatePath("/")
+    revalidatePath("/waitlist")
 
     return {
       success: true,

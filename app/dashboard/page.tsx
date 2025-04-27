@@ -232,6 +232,26 @@ export default function Dashboard() {
                     </div>
                   </div>
 
+                  {waitlistEntry && (
+                    <div className="bg-white rounded-xl shadow-md overflow-hidden">
+                      <div className="bg-texas-blue p-4">
+                        <h3 className="text-lg font-bold text-white">Waitlist Status</h3>
+                      </div>
+                      <div className="p-4">
+                        <div className="text-center mb-4">
+                          <div className="text-4xl font-bold text-texas-orange">#{waitlistEntry.position}</div>
+                          <p className="text-gray-600 text-sm">Your current position</p>
+                        </div>
+                        <Link
+                          href="/waitlist"
+                          className="w-full bg-texas-orange hover:bg-texas-orange/80 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center justify-center"
+                        >
+                          <span>View Waitlist Dashboard</span>
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="bg-white rounded-xl p-6 shadow-md mb-8">
                     <h3 className="text-lg font-bold text-texas-blue mb-4">Your Victory History</h3>
                     {loading ? (
