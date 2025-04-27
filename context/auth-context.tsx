@@ -125,6 +125,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password,
       })
 
+      if (!error) {
+        // Manually update state to ensure immediate UI update
+        setSession(data.session)
+        setUser(data.user)
+
+        // Navigate to dashboard after successful sign in
+        router.push("/dashboard")
+      }
+
       return { data, error }
     } catch (error) {
       console.error("Error signing in:", error)

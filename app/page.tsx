@@ -6,7 +6,6 @@ import Testimonials from "@/components/testimonials"
 import MapSection from "@/components/map-section"
 import ContactForm from "@/components/contact-form"
 import WaitlistBanner from "@/components/waitlist-banner"
-import VideoSection from "@/components/video-section"
 import ImageGalleryCarousel from "@/components/image-gallery-carousel"
 import WhyUsSection from "@/components/why-us-section"
 import Link from "next/link"
@@ -134,9 +133,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Video Section */}
-      <VideoSection />
 
       <div className="w-full bg-gradient-to-r from-orange-500 to-yellow-500 py-16">
         <div className="container mx-auto px-4">
