@@ -1,7 +1,6 @@
 import Hero from "@/components/hero"
 import Services from "@/components/services"
 import Pricing from "@/components/pricing"
-import Certifications from "@/components/certifications"
 import Testimonials from "@/components/testimonials"
 import MapSection from "@/components/map-section"
 import ContactForm from "@/components/contact-form"
@@ -66,17 +65,17 @@ export default function Home() {
       <WhyUsSection />
       <Services />
       <TrustIndicators />
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-theme-bg">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 font-display text-texas-blue">Winter HVAC Services</h2>
-            <p className="text-xl max-w-3xl mx-auto text-gray-700">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 font-display gradient-text">Winter HVAC Services</h2>
+            <p className="text-xl max-w-3xl mx-auto text-theme-text">
               Keep your home warm, safe, and energy-efficient during the cold Texas winter months.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-texas-cream rounded-xl overflow-hidden shadow-lg transform transition-all hover:scale-105">
+            <div className="neumorphic-card overflow-hidden transform transition-all hover:scale-105">
               <div className="relative h-64">
                 <Image
                   src="/images/winter-hvac-service.png"
@@ -89,20 +88,20 @@ export default function Home() {
                 />
               </div>
               <div className="p-6">
-                <h3 className="text-2xl font-bold text-texas-blue mb-2">Heating System Tune-Up</h3>
-                <p className="text-gray-700">
+                <h3 className="text-2xl font-bold text-theme-text mb-2">Heating System Tune-Up</h3>
+                <p className="text-theme-text/80">
                   Ensure your heating system runs efficiently all winter with our comprehensive tune-up service.
                 </p>
                 <Link
                   href="/services"
-                  className="inline-block mt-4 bg-texas-orange text-white py-2 px-4 rounded-lg font-bold hover:bg-texas-blue transition-colors"
+                  className="inline-block mt-4 bg-gradient-to-r from-theme-accent to-theme-accent-end text-theme-text py-2 px-4 rounded-lg font-bold hover:opacity-90 transition-colors"
                 >
                   Learn More
                 </Link>
               </div>
             </div>
 
-            <div className="bg-texas-cream rounded-xl overflow-hidden shadow-lg transform transition-all hover:scale-105">
+            <div className="neumorphic-card overflow-hidden transform transition-all hover:scale-105">
               <div className="relative h-64">
                 <Image
                   src="/images/winter-fireplace.png"
@@ -115,20 +114,20 @@ export default function Home() {
                 />
               </div>
               <div className="p-6">
-                <h3 className="text-2xl font-bold text-texas-blue mb-2">Fireplace & Chimney Safety</h3>
-                <p className="text-gray-700">
+                <h3 className="text-2xl font-bold text-theme-text mb-2">Fireplace & Chimney Safety</h3>
+                <p className="text-theme-text/80">
                   Keep your family safe with our professional chimney cleaning and inspection services.
                 </p>
                 <Link
                   href="/services"
-                  className="inline-block mt-4 bg-texas-orange text-white py-2 px-4 rounded-lg font-bold hover:bg-texas-blue transition-colors"
+                  className="inline-block mt-4 bg-gradient-to-r from-theme-accent to-theme-accent-end text-theme-text py-2 px-4 rounded-lg font-bold hover:opacity-90 transition-colors"
                 >
                   Learn More
                 </Link>
               </div>
             </div>
 
-            <div className="bg-texas-cream rounded-xl overflow-hidden shadow-lg transform transition-all hover:scale-105">
+            <div className="neumorphic-card overflow-hidden transform transition-all hover:scale-105">
               <div className="relative h-64">
                 <Image
                   src="/images/winter-duct-cleaning.png"
@@ -141,13 +140,13 @@ export default function Home() {
                 />
               </div>
               <div className="p-6">
-                <h3 className="text-2xl font-bold text-texas-blue mb-2">Winter Air Quality</h3>
-                <p className="text-gray-700">
+                <h3 className="text-2xl font-bold text-theme-text mb-2">Winter Air Quality</h3>
+                <p className="text-theme-text/80">
                   Improve your indoor air quality during winter months when windows stay closed.
                 </p>
                 <Link
                   href="/services"
-                  className="inline-block mt-4 bg-texas-orange text-white py-2 px-4 rounded-lg font-bold hover:bg-texas-blue transition-colors"
+                  className="inline-block mt-4 bg-gradient-to-r from-theme-accent to-theme-accent-end text-theme-text py-2 px-4 rounded-lg font-bold hover:opacity-90 transition-colors"
                 >
                   Learn More
                 </Link>
@@ -157,18 +156,20 @@ export default function Home() {
         </div>
       </section>
 
-      <div className="w-full bg-gradient-to-r from-orange-500 to-yellow-500 py-16">
+      <div className="w-full py-16 bg-texas-orange">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-white text-center mb-8">
-            Breathing Easy in Texas, One Duct at a Time.
-          </h2>
-          <div className="flex justify-center">
-            <Link
-              href="/contact"
-              className="bg-white text-orange-600 hover:bg-orange-100 font-bold py-3 px-8 rounded-full text-xl transition-all transform hover:scale-105"
-            >
-              Get a Free Estimate
-            </Link>
+          <div className="rounded-[50px] py-12 px-8 bg-[#ff7b1c] shadow-[10px_10px_20px_#d95600,-10px_-10px_20px_#ff9633] mx-auto max-w-4xl">
+            <h2 className="text-4xl md:text-5xl font-bold text-white text-center mb-8">
+              Breathing Easy in Texas, One Duct at a Time.
+            </h2>
+            <div className="flex justify-center">
+              <Link
+                href="/contact"
+                className="bg-gradient-to-r from-theme-accent to-theme-accent-end text-theme-text hover:opacity-90 font-bold py-3 px-8 rounded-full text-xl transition-all transform hover:scale-105"
+              >
+                Get a Free Estimate
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -177,40 +178,39 @@ export default function Home() {
       <ServiceLocations />
 
       {/* Stats Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-theme-bg">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-            <div className="p-6 transform transition-all hover:scale-105">
-              <div className="text-5xl font-bold text-texas-orange mb-2">3,500+</div>
-              <div className="text-xl text-gray-700">Homes Serviced</div>
+            <div className="neumorphic-card p-6 transform transition-all hover:scale-105">
+              <div className="text-5xl font-bold text-theme-accent mb-2">3,500+</div>
+              <div className="text-xl text-theme-text">Homes Serviced</div>
             </div>
-            <div className="p-6 transform transition-all hover:scale-105">
-              <div className="text-5xl font-bold text-texas-orange mb-2">98%</div>
-              <div className="text-xl text-gray-700">Customer Satisfaction</div>
+            <div className="neumorphic-card p-6 transform transition-all hover:scale-105">
+              <div className="text-5xl font-bold text-theme-accent mb-2">98%</div>
+              <div className="text-xl text-theme-text">Customer Satisfaction</div>
             </div>
-            <div className="p-6 transform transition-all hover:scale-105">
-              <div className="text-5xl font-bold text-texas-orange mb-2">12+</div>
-              <div className="text-xl text-gray-700">Years in Business</div>
+            <div className="neumorphic-card p-6 transform transition-all hover:scale-105">
+              <div className="text-5xl font-bold text-theme-accent mb-2">12+</div>
+              <div className="text-xl text-theme-text">Years in Business</div>
             </div>
-            <div className="p-6 transform transition-all hover:scale-105">
-              <div className="text-5xl font-bold text-texas-orange mb-2">100%</div>
-              <div className="text-xl text-gray-700">Satisfaction Guarantee</div>
+            <div className="neumorphic-card p-6 transform transition-all hover:scale-105">
+              <div className="text-5xl font-bold text-theme-accent mb-2">100%</div>
+              <div className="text-xl text-theme-text">Satisfaction Guarantee</div>
             </div>
           </div>
         </div>
       </section>
 
-      <Certifications />
       <Testimonials />
 
       {/* Gallery Carousel Section */}
-      <section className="w-full bg-white py-16">
+      <section className="w-full bg-theme-bg py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 font-display text-texas-blue">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 font-display gradient-text">
               Our Work Speaks for Itself
             </h2>
-            <p className="text-xl max-w-3xl mx-auto text-gray-700 mb-8">
+            <p className="text-xl max-w-3xl mx-auto text-theme-text mb-8">
               Check out our gallery of before and after transformations
             </p>
 
@@ -221,14 +221,14 @@ export default function Home() {
 
             <Link
               href="/gallery"
-              className="bg-texas-orange hover:bg-texas-blue text-white font-bold py-3 px-8 rounded-full text-xl transition-all transform hover:scale-105 inline-block mt-4"
+              className="bg-gradient-to-r from-theme-accent to-theme-accent-end text-theme-text hover:opacity-90 font-bold py-3 px-8 rounded-full text-xl transition-all transform hover:scale-105 inline-block mt-4"
             >
               View Full Gallery
             </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="bg-texas-cream rounded-xl overflow-hidden shadow-lg">
+            <div className="neumorphic-card overflow-hidden">
               <div className="relative h-64 w-full">
                 <Image
                   src="/images/gallery/custom-1.svg"
@@ -239,11 +239,11 @@ export default function Home() {
                 />
               </div>
               <div className="p-4">
-                <h3 className="font-bold text-texas-blue">Air Duct Cleaning</h3>
-                <p className="text-gray-700 text-sm">Professional Service</p>
+                <h3 className="font-bold text-theme-text">Air Duct Cleaning</h3>
+                <p className="text-theme-text/70 text-sm">Professional Service</p>
               </div>
             </div>
-            <div className="bg-texas-cream rounded-xl overflow-hidden shadow-lg">
+            <div className="neumorphic-card overflow-hidden">
               <div className="relative h-64 w-full">
                 <Image
                   src="/images/gallery/custom-2.svg"
@@ -254,11 +254,11 @@ export default function Home() {
                 />
               </div>
               <div className="p-4">
-                <h3 className="font-bold text-texas-blue">HVAC Maintenance</h3>
-                <p className="text-gray-700 text-sm">System Optimization</p>
+                <h3 className="font-bold text-theme-text">HVAC Maintenance</h3>
+                <p className="text-theme-text/70 text-sm">System Optimization</p>
               </div>
             </div>
-            <div className="bg-texas-cream rounded-xl overflow-hidden shadow-lg">
+            <div className="neumorphic-card overflow-hidden">
               <div className="relative h-64 w-full">
                 <Image
                   src="/images/gallery/custom-3.svg"
@@ -269,11 +269,11 @@ export default function Home() {
                 />
               </div>
               <div className="p-4">
-                <h3 className="font-bold text-texas-blue">Dryer Vent Cleaning</h3>
-                <p className="text-gray-700 text-sm">Fire Prevention</p>
+                <h3 className="font-bold text-theme-text">Dryer Vent Cleaning</h3>
+                <p className="text-theme-text/70 text-sm">Fire Prevention</p>
               </div>
             </div>
-            <div className="bg-texas-cream rounded-xl overflow-hidden shadow-lg">
+            <div className="neumorphic-card overflow-hidden">
               <div className="relative h-64 w-full">
                 <Image
                   src="/images/gallery/custom-4.svg"
@@ -284,8 +284,8 @@ export default function Home() {
                 />
               </div>
               <div className="p-4">
-                <h3 className="font-bold text-texas-blue">Chimney Sweeping</h3>
-                <p className="text-gray-700 text-sm">Safety Inspection</p>
+                <h3 className="font-bold text-theme-text">Chimney Sweeping</h3>
+                <p className="text-theme-text/70 text-sm">Safety Inspection</p>
               </div>
             </div>
           </div>

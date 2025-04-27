@@ -1,5 +1,5 @@
-import { Check } from "lucide-react"
 import Link from "next/link"
+import { Check } from "lucide-react"
 
 const tiers = [
   {
@@ -57,11 +57,11 @@ const tiers = [
 
 export default function Pricing() {
   return (
-    <section className="py-20 bg-white" id="pricing">
+    <section className="py-20 bg-theme-bg">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 font-display text-texas-blue">Tiered Warfare</h2>
-          <p className="text-xl max-w-3xl mx-auto text-gray-700">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 font-display gradient-text">Pricing Plans</h2>
+          <p className="text-xl max-w-3xl mx-auto text-theme-text">
             Choose the perfect plan to keep your home's air quality at its best year-round.
           </p>
         </div>
@@ -70,35 +70,31 @@ export default function Pricing() {
           {tiers.map((tier) => (
             <div
               key={tier.name}
-              className={`pricing-card bg-white rounded-3xl shadow-xl overflow-hidden ${
-                tier.mostPopular ? "premium ring-2 ring-texas-orange" : ""
-              }`}
+              className={`neumorphic-card overflow-hidden ${tier.mostPopular ? "ring-2 ring-theme-accent" : ""}`}
             >
-              <div className="p-8 bg-texas-cream">
-                <h3 className="text-2xl font-bold text-texas-blue">{tier.name}</h3>
+              <div className="p-8 bg-theme-bg/50">
+                <h3 className="text-2xl font-bold text-theme-text">{tier.name}</h3>
                 <div className="mt-4 flex items-baseline">
-                  <span className="text-5xl font-extrabold text-texas-blue">{tier.price}</span>
-                  <span className="ml-1 text-xl text-gray-600">{tier.frequency}</span>
+                  <span className="text-5xl font-extrabold text-theme-accent">{tier.price}</span>
+                  <span className="ml-1 text-xl text-theme-text/70">{tier.frequency}</span>
                 </div>
-                <p className="mt-5 text-gray-600">{tier.description}</p>
+                <p className="mt-5 text-theme-text/80">{tier.description}</p>
               </div>
               <div className="p-8">
                 <ul className="space-y-4">
                   {tier.features.map((feature) => (
                     <li key={feature} className="flex items-start">
                       <div className="flex-shrink-0">
-                        <Check className="h-6 w-6 text-texas-orange" />
+                        <Check className="h-6 w-6 text-theme-accent" />
                       </div>
-                      <p className="ml-3 text-gray-700">{feature}</p>
+                      <p className="ml-3 text-theme-text/80">{feature}</p>
                     </li>
                   ))}
                 </ul>
                 <div className="mt-8">
                   <Link
                     href="/contact"
-                    className={`w-full block text-center rounded-full py-3 px-6 font-bold text-white ${
-                      tier.mostPopular ? "bg-texas-orange hover:bg-texas-blue" : "bg-texas-blue hover:bg-texas-orange"
-                    } transition-colors`}
+                    className={`w-full block text-center rounded-full py-3 px-6 font-bold text-theme-text bg-gradient-to-r from-theme-accent to-theme-accent-end hover:opacity-90 transition-all`}
                   >
                     {tier.cta}
                   </Link>

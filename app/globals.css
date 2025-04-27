@@ -8,6 +8,18 @@
   --texas-cream: #f2f2f2;
 }
 
+/* Add new theme variables */
+:root {
+  --theme-accent-start: #60a9ff;
+  --theme-accent-end: #d187ff;
+  --theme-text: #eeeff5;
+  --theme-bg: #282c32;
+  --theme-card-light: #2b2f36;
+  --theme-card-dark: #24282d;
+  --theme-shadow-dark: #1c1f23;
+  --theme-shadow-light: #343941;
+}
+
 @layer base {
   html {
     font-size: 16px;
@@ -85,9 +97,9 @@
 }
 
 .neumorphic-card {
-  border-radius: 12px;
-  background: linear-gradient(145deg, #e6e6e6, #ffffff);
-  box-shadow: 8px 8px 16px #d1d1d1, -8px -8px 16px #ffffff;
+  border-radius: 50px;
+  background: linear-gradient(145deg, #2b2f36, #24282d);
+  box-shadow: 10px 10px 20px #1c1f23, -10px -10px 20px #343941;
 }
 
 .hero-video-container {
@@ -382,4 +394,12 @@
   .trust-badge img {
     @apply w-10 h-10;
   }
+}
+
+/* Add gradient text utility */
+.gradient-text {
+  background: linear-gradient(90deg, var(--theme-accent-start) 10%, var(--theme-accent-end) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }

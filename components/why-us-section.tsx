@@ -2,10 +2,10 @@ import type React from "react"
 
 export default function WhyUsSection() {
   return (
-    <section className="why-us py-12">
+    <section className="why-us py-16 bg-gray-50">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-4 text-center">Why Us</h2>
-        <p className="text-lg text-center max-w-3xl mx-auto mb-12">
+        <h2 className="text-4xl md:text-5xl font-bold mb-4 text-center font-display text-gray-800">Why Us</h2>
+        <p className="text-lg text-center max-w-3xl mx-auto mb-12 text-gray-700">
           We're dedicated to providing top-notch air duct cleaning and ventilation services. Our team of experts uses
           state-of-the-art technology to ensure your home or business is safe, healthy, and energy-efficient.
         </p>
