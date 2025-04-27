@@ -61,12 +61,10 @@
     "@supabase/supabase-js": "latest",
     "@emotion/is-prop-valid": "latest",
     "@supabase/auth-helpers-nextjs": "latest",
-    "mapbox-gl": "latest",
     "ai": "latest",
     "@supabase/ssr": "latest",
-    "@ai-sdk/react": "latest",
-    "@ai-sdk/groq": "latest",
-    "framer-motion": "latest"
+    "framer-motion": "latest",
+    "@ai-sdk/groq": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",
