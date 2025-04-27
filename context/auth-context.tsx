@@ -1,9 +1,8 @@
 "use client"
 
 import type React from "react"
-
 import { createContext, useContext, useEffect, useState } from "react"
-import { createClientSupabaseClient } from "@/lib/supabase/client"
+import { getSupabaseClient } from "@/lib/supabase-singleton"
 import type { Session, User } from "@supabase/supabase-js"
 import { useRouter } from "next/navigation"
 
@@ -35,30 +34,20 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-// Create the Supabase client outside of the component to ensure it's only created once
-let supabase: ReturnType<typeof createClientSupabaseClient> | null = null
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
 
-  // Initialize the Supabase client once
   useEffect(() => {
-    // Only initialize in the browser
-    if (typeof window !== "undefined" && !supabase) {
-      supabase = createClientSupabaseClient()
-    }
-  }, [])
+    // Only run in browser
+    if (typeof window === "undefined") return
 
-  useEffect(() => {
+    const supabase = getSupabaseClient()
+
     const setData = async () => {
       try {
-        if (!supabase) {
-          supabase = createClientSupabaseClient()
-        }
-
         const {
           data: { session },
           error,
@@ -75,30 +64,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     setData()
 
-    // Only set up the listener if supabase is available
-    if (supabase) {
-      const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-        console.log("Auth state changed:", event)
-        setSession(session)
-        setUser(session?.user ?? null)
-        setIsLoading(false)
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log("Auth state changed:", event)
+      setSession(session)
+      setUser(session?.user ?? null)
+      setIsLoading(false)
 
-        // Force a router refresh to update server components
-        router.refresh()
-      })
+      // Force a router refresh to update server components
+      router.refresh()
+    })
 
-      return () => {
-        authListener.subscription.unsubscribe()
-      }
+    return () => {
+      authListener.subscription.unsubscribe()
     }
   }, [router])
 
   const signUp = async (email: string, password: string, metadata?: { [key: string]: any }) => {
     try {
-      if (!supabase) {
-        supabase = createClientSupabaseClient()
-      }
-
+      const supabase = getSupabaseClient()
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -116,10 +99,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     try {
-      if (!supabase) {
-        supabase = createClientSupabaseClient()
-      }
-
+      const supabase = getSupabaseClient()
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -143,10 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      if (!supabase) {
-        supabase = createClientSupabaseClient()
-      }
-
+      const supabase = getSupabaseClient()
       await supabase.auth.signOut()
       router.push("/")
     } catch (error) {
@@ -156,10 +133,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const resetPassword = async (email: string) => {
     try {
-      if (!supabase) {
-        supabase = createClientSupabaseClient()
-      }
-
+      const supabase = getSupabaseClient()
       const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/reset-password`,
       })

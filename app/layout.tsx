@@ -7,6 +7,7 @@ import Footer from "@/components/footer"
 import { AuthProvider } from "@/context/auth-context"
 import DuctDaddyAI from "@/components/duct-daddy-ai"
 import { SupabaseDebug } from "@/components/supabase-debug"
+import { SupabaseCleanup } from "@/components/supabase-cleanup"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -35,6 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${montserrat.variable} ${openSans.variable} font-sans`}>
+        {process.env.NODE_ENV === "development" && <SupabaseCleanup />}
         <AuthProvider>
           <Header />
           {children}

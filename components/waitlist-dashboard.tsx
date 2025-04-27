@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { ArrowUp, Clock, Users, Zap, Award } from "lucide-react"
 import { motion } from "framer-motion"
 import { formatDistanceToNow } from "date-fns"
@@ -10,6 +10,7 @@ interface WaitlistDashboardProps {
   peopleAhead: number
   recentChanges: any[]
   userId: string
+  totalPeople: number
 }
 
 export default function WaitlistDashboard({
@@ -17,30 +18,17 @@ export default function WaitlistDashboard({
   peopleAhead: initialPeopleAhead,
   recentChanges,
   userId,
+  totalPeople,
 }: WaitlistDashboardProps) {
-  const [position, setPosition] = useState(waitlistEntry?.position || 0)
-  const [peopleAhead, setPeopleAhead] = useState(initialPeopleAhead)
+  const [position] = useState(waitlistEntry?.position || 0)
+  const [peopleAhead] = useState(initialPeopleAhead)
   const [showFastTrackModal, setShowFastTrackModal] = useState(false)
   const [fastTrackAmount, setFastTrackAmount] = useState(20)
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState("")
   const [successMessage, setSuccessMessage] = useState("")
-  const [totalPeople, setTotalPeople] = useState(position + Math.floor(Math.random() * 50) + 30)
 
-  // Simulate real-time updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // Randomly increase total people in line (for visual effect)
-      setTotalPeople((prev) => prev + Math.floor(Math.random() * 3) + 1)
-
-      // Occasionally decrease people ahead (simulate others leaving)
-      if (Math.random() > 0.7 && peopleAhead > 0) {
-        setPeopleAhead((prev) => Math.max(0, prev - 1))
-      }
-    }, 15000)
-
-    return () => clearInterval(interval)
-  }, [])
+  // Removed the useEffect that randomly changed numbers
 
   const handleFastTrack = async () => {
     setIsProcessing(true)
@@ -63,17 +51,21 @@ export default function WaitlistDashboard({
         }),
       })
 
+      if (!response.ok) {
+        throw new Error(`Payment request failed with status: ${response.status}`)
+      }
+
       const data = await response.json()
 
       if (data.success && data.approvalUrl) {
         // Redirect to PayPal for payment
         window.location.href = data.approvalUrl
       } else {
-        setError("Failed to create payment. Please try again.")
+        setError(data.message || "Failed to create payment. Please try again.")
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating payment:", error)
-      setError("An unexpected error occurred. Please try again.")
+      setError(error.message || "An unexpected error occurred. Please try again.")
     } finally {
       setIsProcessing(false)
     }
@@ -115,7 +107,7 @@ export default function WaitlistDashboard({
           <h2 className="text-xl font-bold text-white mb-2">Your Current Position</h2>
           <div className="flex justify-center items-center">
             <motion.div
-              key={position}
+              key="position"
               initial={{ scale: 1.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               className="text-7xl md:text-8xl font-bold text-texas-orange"
@@ -176,7 +168,7 @@ export default function WaitlistDashboard({
             <h3 className="font-bold text-texas-blue mb-3 flex items-center">
               <Award className="mr-2 h-5 w-5" /> Recent Fast Tracks
             </h3>
-            {recentChanges.length > 0 ? (
+            {recentChanges && recentChanges.length > 0 ? (
               <ul className="space-y-2">
                 {recentChanges.map((change, index) => (
                   <li key={index} className="text-sm text-gray-700 flex items-center">

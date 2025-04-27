@@ -35,15 +35,7 @@ export default function DuctDaddyAI() {
       {
         id: "welcome-message",
         role: "assistant",
-        content: `Hi there! I'm Duct Daddy AI, your DUCTWARRIORS assistant. I can help you with:
-        
-• Answering questions about our services
-• Scheduling appointments
-• Adding you to our waitlist
-• Managing your account
-• Setting up service subscriptions
-
-How can I help you today?`,
+        content: `Hi there! I'm Duct Daddy AI, your DUCTWARRIORS assistant. How can I help you today?`,
       },
     ],
     body: {

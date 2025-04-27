@@ -10,65 +10,87 @@ export const metadata: Metadata = {
 
 export default async function WaitlistPage() {
   const supabase = createServerSupabaseClient()
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
 
-  // Get total count of people in waitlist
-  const { count: totalPeople } = await supabase.from("waitlist").select("*", { count: "exact", head: true })
+  try {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
 
-  // Get recent position changes (for animation effect)
-  const { data: recentChanges } = await supabase
-    .from("waitlist_bumps")
-    .select("positions_moved, created_at")
-    .order("created_at", { ascending: false })
-    .limit(10)
-
-  // If user is authenticated, get their waitlist position
-  let waitlistEntry = null
-  let peopleAhead = 0
-
-  if (session) {
-    const { data: entry } = await supabase
-      .from("waitlist")
-      .select("id, position, created_at")
-      .eq("user_id", session.user.id)
+    // Get the official waitlist count from the database
+    const { data: counterData } = await supabase
+      .from("waitlist_counter")
+      .select("total_count")
+      .order("id", { ascending: false })
+      .limit(1)
       .single()
 
-    if (entry) {
-      waitlistEntry = entry
+    // Use the stored count or fallback to 347 if not found
+    const totalPeople = counterData?.total_count || 347
 
-      // Get count of people ahead
-      const { count: ahead } = await supabase
+    // Get recent position changes (for display only)
+    const { data: recentChanges } = await supabase
+      .from("waitlist_bumps")
+      .select("positions_moved, created_at")
+      .order("created_at", { ascending: false })
+      .limit(10)
+
+    // If user is authenticated, get their waitlist position
+    let waitlistEntry = null
+    let peopleAhead = 0
+
+    if (session) {
+      const { data: entry } = await supabase
         .from("waitlist")
-        .select("*", { count: "exact", head: true })
-        .lt("position", entry.position)
+        .select("id, position, created_at")
+        .eq("user_id", session.user.id)
+        .single()
 
-      peopleAhead = ahead || 0
+      if (entry) {
+        waitlistEntry = entry
+
+        // Get count of people ahead
+        const { count: ahead } = await supabase
+          .from("waitlist")
+          .select("*", { count: "exact", head: true })
+          .lt("position", entry.position)
+
+        peopleAhead = ahead || 0
+      }
     }
+
+    return (
+      <main className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-texas-blue mb-8 text-center">Duct Warriors Waitlist</h1>
+
+        {session && waitlistEntry ? (
+          // Show personalized dashboard for authenticated users on the waitlist
+          <WaitlistDashboard
+            waitlistEntry={waitlistEntry}
+            peopleAhead={peopleAhead}
+            recentChanges={recentChanges || []}
+            userId={session.user.id}
+            totalPeople={totalPeople}
+          />
+        ) : (
+          // Show public waitlist view for unauthenticated users or those not on waitlist
+          <PublicWaitlist
+            totalPeople={totalPeople}
+            recentChanges={recentChanges || []}
+            isAuthenticated={!!session}
+            userId={session?.user?.id}
+          />
+        )}
+      </main>
+    )
+  } catch (error) {
+    console.error("Error loading waitlist page:", error)
+
+    // Fallback to a basic public waitlist view if there's an error
+    return (
+      <main className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-texas-blue mb-8 text-center">Duct Warriors Waitlist</h1>
+        <PublicWaitlist totalPeople={347} recentChanges={[]} isAuthenticated={false} userId={undefined} />
+      </main>
+    )
   }
-
-  return (
-    <main className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl md:text-4xl font-bold text-texas-blue mb-8 text-center">Duct Warriors Waitlist</h1>
-
-      {session && waitlistEntry ? (
-        // Show personalized dashboard for authenticated users on the waitlist
-        <WaitlistDashboard
-          waitlistEntry={waitlistEntry}
-          peopleAhead={peopleAhead}
-          recentChanges={recentChanges || []}
-          userId={session.user.id}
-        />
-      ) : (
-        // Show public waitlist view for unauthenticated users or those not on waitlist
-        <PublicWaitlist
-          totalPeople={totalPeople || 0}
-          recentChanges={recentChanges || []}
-          isAuthenticated={!!session}
-          userId={session?.user?.id}
-        />
-      )}
-    </main>
-  )
 }

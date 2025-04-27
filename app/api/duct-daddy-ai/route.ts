@@ -1,7 +1,6 @@
-import { generateText } from "ai"
+import { streamText } from "@ai-sdk/react"
 import { groq } from "@ai-sdk/groq"
-import { openai } from "@ai-sdk/openai"
-import { type NextRequest, NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
 import { createServerSupabaseClient } from "@/lib/supabase/server"
 
 // Constants
@@ -9,6 +8,9 @@ const CACHE_TTL = 1000 * 60 * 60 // 1 hour
 const DEFAULT_WAITLIST_POSITION = 1344
 const SUPPORT_EMAIL = "support@ductwarriors.com"
 const MAX_RETRY_ATTEMPTS = 3
+
+// Create the Groq model instance once
+const llama4Model = groq("meta-llama/llama-4-scout-17b-16e-instruct")
 
 // Types
 type Message = {
@@ -109,42 +111,101 @@ export async function POST(req: NextRequest) {
     const cachedResponse = checkCache(cacheKey)
     if (cachedResponse) {
       console.log("Using cached response for:", cacheKey)
-      return NextResponse.json({ role: "assistant", content: cachedResponse })
+      return createStreamingResponse(cachedResponse)
     }
 
-    // Try primary model first (Llama 4)
     try {
-      console.log("Attempting to use primary model: meta-llama/llama-4-scout-17b-16e-instruct")
-      const aiResponse = await generateAIResponse(messages, "primary")
+      console.log("Generating response with Llama 4...")
+      console.log("Input messages:", JSON.stringify(messages, null, 2))
 
-      // Process the response
-      await processAIResponse(aiResponse, lastUserMessage.content, userId, supabase, cacheKey)
+      // Use streamText instead of generateText to handle streaming properly
+      const stream = await streamText({
+        model: llama4Model,
+        messages,
+        system: systemPrompt,
+        maxTokens: 1000,
+        temperature: 0.7,
+      })
 
-      // Return the response
-      return NextResponse.json({ role: "assistant", content: aiResponse })
-    } catch (primaryError) {
-      // Log the primary model error
-      console.error("Primary model error:", primaryError)
+      // Process the stream and return it in SSE format
+      return new Response(
+        new ReadableStream({
+          async start(controller) {
+            const encoder = new TextEncoder()
+            let fullResponse = ""
 
-      // Fall back to GPT-4o
-      try {
-        console.log("Falling back to GPT-4o")
-        const fallbackResponse = await generateAIResponse(messages, "fallback")
+            try {
+              // Process each chunk from the stream
+              for await (const chunk of stream) {
+                fullResponse += chunk.text
 
-        // Process the response
-        await processAIResponse(fallbackResponse, lastUserMessage.content, userId, supabase, cacheKey)
+                // Format the chunk as an SSE message
+                const formattedChunk = JSON.stringify({
+                  id: Date.now().toString(),
+                  role: "assistant",
+                  content: chunk.text,
+                  createdAt: new Date(),
+                })
 
-        // Return the response
-        return NextResponse.json({ role: "assistant", content: fallbackResponse })
-      } catch (fallbackError) {
-        // Both models failed, log the error
-        console.error("Fallback model error:", fallbackError)
+                // Send the chunk in SSE format
+                controller.enqueue(encoder.encode(`data: ${formattedChunk}\n\n`))
+              }
 
-        // Return a generic response
-        return createErrorResponse(
-          `I'm sorry, I'm having trouble processing your request right now. Please try again in a moment or contact our support team at ${SUPPORT_EMAIL} if you need immediate assistance.`,
-        )
+              // Cache the full response for future use
+              if (fullResponse.length > 0) {
+                responseCache.set(cacheKey, {
+                  text: fullResponse,
+                  timestamp: Date.now(),
+                })
+
+                // Process the full response for actions
+                await processAIResponse(fullResponse, lastUserMessage.content, userId, supabase, cacheKey)
+              }
+
+              // Send the end of stream marker
+              controller.enqueue(encoder.encode("data: [DONE]\n\n"))
+              controller.close()
+            } catch (error) {
+              console.error("Error processing stream:", error)
+
+              // Send an error message in SSE format
+              const errorMessage = JSON.stringify({
+                id: Date.now().toString(),
+                role: "assistant",
+                content: `I'm sorry, I'm having trouble processing your request right now. Please try again in a moment or contact our support team at ${SUPPORT_EMAIL} if you need immediate assistance.`,
+                createdAt: new Date(),
+              })
+
+              controller.enqueue(encoder.encode(`data: ${errorMessage}\n\n`))
+              controller.enqueue(encoder.encode("data: [DONE]\n\n"))
+              controller.close()
+            }
+          },
+        }),
+        {
+          headers: {
+            "Content-Type": "text/event-stream",
+            "Cache-Control": "no-cache",
+            Connection: "keep-alive",
+          },
+        },
+      )
+    } catch (error) {
+      console.error("Error generating response:", error)
+
+      // Log detailed error information
+      if (error instanceof Error) {
+        console.error("Error name:", error.name)
+        console.error("Error message:", error.message)
+        console.error("Error stack:", error.stack)
+      } else {
+        console.error("Unknown error type:", typeof error)
       }
+
+      // Return a generic response
+      return createErrorResponse(
+        `I'm sorry, I'm having trouble processing your request right now. Please try again in a moment or contact our support team at ${SUPPORT_EMAIL} if you need immediate assistance.`,
+      )
     }
   } catch (error: any) {
     console.error("Error in Duct Daddy AI:", error)
@@ -157,11 +218,63 @@ export async function POST(req: NextRequest) {
 /**
  * Creates a standardized error response
  */
-function createErrorResponse(message: string): NextResponse {
+function createErrorResponse(message: string): Response {
   console.error(`Error response: ${message}`)
-  return NextResponse.json({
-    role: "assistant",
-    content: message,
+
+  // Create a response in the format expected by the Vercel AI SDK
+  const encoder = new TextEncoder()
+  const stream = new ReadableStream({
+    start(controller) {
+      // Format the response as expected by the Vercel AI SDK
+      const formattedMessage = JSON.stringify({
+        id: Date.now().toString(),
+        role: "assistant",
+        content: message,
+        createdAt: new Date(),
+      })
+
+      controller.enqueue(encoder.encode(`data: ${formattedMessage}\n\n`))
+      controller.enqueue(encoder.encode("data: [DONE]\n\n"))
+      controller.close()
+    },
+  })
+
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive",
+    },
+  })
+}
+
+/**
+ * Creates a streaming response in the format expected by the Vercel AI SDK
+ */
+function createStreamingResponse(content: string): Response {
+  const encoder = new TextEncoder()
+  const stream = new ReadableStream({
+    start(controller) {
+      // Format the response as expected by the Vercel AI SDK
+      const formattedMessage = JSON.stringify({
+        id: Date.now().toString(),
+        role: "assistant",
+        content,
+        createdAt: new Date(),
+      })
+
+      controller.enqueue(encoder.encode(`data: ${formattedMessage}\n\n`))
+      controller.enqueue(encoder.encode("data: [DONE]\n\n"))
+      controller.close()
+    },
+  })
+
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive",
+    },
   })
 }
 
@@ -179,36 +292,6 @@ function checkCache(cacheKey: string): string | null {
     }
   }
   return null
-}
-
-/**
- * Generates a response from the AI model
- */
-async function generateAIResponse(messages: Message[], modelType: "primary" | "fallback"): Promise<string> {
-  const modelConfig = {
-    primary: {
-      model: groq("meta-llama/llama-4-scout-17b-16e-instruct"),
-      name: "Llama 4",
-    },
-    fallback: {
-      model: openai("gpt-4o"),
-      name: "GPT-4o",
-    },
-  }
-
-  const config = modelConfig[modelType]
-  console.log(`Generating response with ${config.name}...`)
-
-  const { text } = await generateText({
-    model: config.model,
-    messages,
-    system: systemPrompt,
-    maxTokens: 1000,
-    temperature: 0.7,
-  })
-
-  console.log(`${config.name} response generated successfully`)
-  return text
 }
 
 /**

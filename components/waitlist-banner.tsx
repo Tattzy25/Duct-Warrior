@@ -29,32 +29,34 @@ export default function WaitlistBanner() {
   const [waitlistId, setWaitlistId] = useState<string | null>(null)
 
   useEffect(() => {
-    // Check if user is on waitlist
+    // Check if user is on waitlist and get the real count from the database
     const checkWaitlist = async () => {
+      const supabase = createClientSupabaseClient()
+
+      // Get the official count from waitlist_counter
+      const { data: counterData } = await supabase
+        .from("waitlist_counter")
+        .select("total_count")
+        .order("id", { ascending: false })
+        .limit(1)
+        .single()
+
+      if (counterData?.total_count) {
+        setPosition(counterData.total_count)
+      }
+
+      // Check if current user is on waitlist
       if (user) {
-        const supabase = createClientSupabaseClient()
         const { data } = await supabase.from("waitlist").select("id, position").eq("user_id", user.id).single()
 
         if (data) {
           setIsLoggedIn(true)
-          setPosition(data.position)
           setWaitlistId(data.id)
         }
       }
     }
 
     checkWaitlist()
-
-    // Increase position randomly every 10-15 seconds for visual effect
-    const interval = setInterval(
-      () => {
-        const increase = Math.floor(Math.random() * 5) + 1
-        setPeopleAfterYou((prev) => prev + increase)
-      },
-      Math.floor(Math.random() * 5000) + 10000,
-    )
-
-    return () => clearInterval(interval)
   }, [user])
 
   useEffect(() => {
@@ -193,32 +195,29 @@ export default function WaitlistBanner() {
   }
 
   return (
-    <div className="waitlist-banner w-full bg-gradient-to-r from-texas-blue to-texas-blue-700" id="waitlist">
+    <div className="waitlist-banner w-full bg-gradient-to-r from-texas-orange to-texas-orange-700" id="waitlist">
       <div className="container mx-auto px-4 py-5 relative z-10">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div>
-            <span className="font-bold text-xl text-white">
-              <Shield className="inline-block mr-2 h-5 w-5" /> Your Battle Position:
-            </span>
-            <span className="text-3xl font-bold text-texas-orange">#{position}</span>
-            <span className="ml-2 text-sm font-medium text-white">({peopleAfterYou} warriors behind you)</span>
-            <span className="ml-2 bg-white text-texas-orange px-2 py-1 rounded-full text-sm font-bold">
-              30% OFF for Waitlist Warriors!
-            </span>
-          </div>
+        <div className="flex flex-col items-center justify-center text-center py-6">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-2 tracking-tight">
+            <Shield className="inline-block mr-3 h-8 w-8 text-gray-900" />
+            Join {position}+ Texans
+          </h2>
+          <p className="text-xl md:text-2xl font-semibold text-gray-800 max-w-3xl">
+            Who trust Duct Warriors with their home's air quality and safety
+          </p>
 
-          <div className="mt-4 md:mt-0 flex flex-wrap gap-2">
+          <div className="mt-6">
             {!isLoggedIn ? (
               <button
                 onClick={() => setShowLoginModal(true)}
-                className="bg-texas-orange hover:bg-texas-orange/80 text-white font-bold py-3 px-6 rounded-full transition-colors flex items-center"
+                className="bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-8 rounded-full transition-colors flex items-center text-lg"
               >
-                <Award className="mr-2 h-5 w-5" /> Join the Battle
+                <Award className="mr-2 h-5 w-5" /> Secure Your Spot
               </button>
             ) : (
               <button
                 onClick={() => setShowBumpModal(true)}
-                className="bg-white hover:bg-gray-100 text-texas-blue font-bold py-3 px-6 rounded-full transition-colors flex items-center"
+                className="bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-8 rounded-full transition-colors flex items-center text-lg"
               >
                 <ArrowUp className="mr-1 h-4 w-4" /> Advance Your Position
               </button>

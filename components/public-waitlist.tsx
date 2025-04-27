@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { ArrowUp, Clock, Users, Zap, Award, ChevronRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { formatDistanceToNow } from "date-fns"
@@ -15,13 +15,8 @@ interface PublicWaitlistProps {
   userId?: string
 }
 
-export default function PublicWaitlist({
-  totalPeople: initialTotal,
-  recentChanges,
-  isAuthenticated,
-  userId,
-}: PublicWaitlistProps) {
-  const [totalPeople, setTotalPeople] = useState(initialTotal || 1344)
+export default function PublicWaitlist({ totalPeople, recentChanges, isAuthenticated, userId }: PublicWaitlistProps) {
+  // No more random number generation - use the server-provided count
   const [showJoinForm, setShowJoinForm] = useState(false)
   const [formData, setFormData] = useState({
     firstName: "",
@@ -33,15 +28,7 @@ export default function PublicWaitlist({
   const [success, setSuccess] = useState("")
   const [position, setPosition] = useState<number | null>(null)
 
-  // Simulate real-time updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // Randomly increase total people in line (for visual effect)
-      setTotalPeople((prev) => prev + Math.floor(Math.random() * 3) + 1)
-    }, 15000)
-
-    return () => clearInterval(interval)
-  }, [])
+  // Removed the useEffect that randomly increased the count
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -84,7 +71,8 @@ export default function PublicWaitlist({
           setPosition(data.position)
         }
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Waitlist submission error:", error)
       setError("An unexpected error occurred. Please try again.")
     } finally {
       setIsSubmitting(false)
@@ -99,7 +87,7 @@ export default function PublicWaitlist({
           <h2 className="text-xl font-bold text-white mb-2">Current Waitlist Size</h2>
           <div className="flex justify-center items-center">
             <motion.div
-              key={totalPeople}
+              key="waitlist-count"
               initial={{ scale: 1.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               className="text-7xl md:text-8xl font-bold text-texas-orange"
@@ -117,6 +105,7 @@ export default function PublicWaitlist({
           </p>
         </div>
 
+        {/* Rest of the component remains the same */}
         {/* Join Waitlist CTA */}
         <div className="p-6">
           {position ? (
@@ -266,7 +255,7 @@ export default function PublicWaitlist({
             <h3 className="font-bold text-texas-blue mb-3 flex items-center">
               <Award className="mr-2 h-5 w-5" /> Recent Fast Tracks
             </h3>
-            {recentChanges.length > 0 ? (
+            {recentChanges && recentChanges.length > 0 ? (
               <ul className="space-y-2">
                 {recentChanges.map((change, index) => (
                   <li key={index} className="text-sm text-gray-700 flex items-center">

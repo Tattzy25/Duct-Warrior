@@ -18,6 +18,26 @@ export default function Home() {
   // Featured gallery images for homepage carousel
   const featuredGalleryImages = [
     {
+      src: "/images/gallery/custom-1.svg",
+      alt: "Professional Duct Cleaning Service",
+      category: "Air Duct Cleaning",
+    },
+    {
+      src: "/images/gallery/custom-2.svg",
+      alt: "HVAC System Maintenance",
+      category: "HVAC Services",
+    },
+    {
+      src: "/images/gallery/custom-3.svg",
+      alt: "Dryer Vent Cleaning",
+      category: "Dryer Vent Services",
+    },
+    {
+      src: "/images/gallery/custom-4.svg",
+      alt: "Chimney Sweeping and Inspection",
+      category: "Chimney Services",
+    },
+    {
       src: "/images/gallery/featured-1.png",
       alt: "Professional Air Duct Cleaning",
       category: "Air Duct Cleaning",
@@ -155,6 +175,31 @@ export default function Home() {
 
       <Pricing />
       <ServiceLocations />
+
+      {/* Stats Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+            <div className="p-6 transform transition-all hover:scale-105">
+              <div className="text-5xl font-bold text-texas-orange mb-2">3,500+</div>
+              <div className="text-xl text-gray-700">Homes Serviced</div>
+            </div>
+            <div className="p-6 transform transition-all hover:scale-105">
+              <div className="text-5xl font-bold text-texas-orange mb-2">98%</div>
+              <div className="text-xl text-gray-700">Customer Satisfaction</div>
+            </div>
+            <div className="p-6 transform transition-all hover:scale-105">
+              <div className="text-5xl font-bold text-texas-orange mb-2">12+</div>
+              <div className="text-xl text-gray-700">Years in Business</div>
+            </div>
+            <div className="p-6 transform transition-all hover:scale-105">
+              <div className="text-5xl font-bold text-texas-orange mb-2">100%</div>
+              <div className="text-xl text-gray-700">Satisfaction Guarantee</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <Certifications />
       <Testimonials />
 
@@ -182,101 +227,65 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="bg-texas-cream rounded-xl overflow-hidden shadow-lg">
-              <div className="grid grid-cols-2">
-                <div className="relative h-48">
-                  <Image
-                    src="/images/before-1.png"
-                    alt="Before cleaning"
-                    fill
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                    style={{ objectFit: "cover" }}
-                    placeholder="blur"
-                    blurDataURL={blurDataUrls.default}
-                  />
-                  <div className="absolute top-2 left-2 bg-red-500 text-white text-xs py-1 px-2 rounded">BEFORE</div>
-                </div>
-                <div className="relative h-48">
-                  <Image
-                    src="/images/after-1.png"
-                    alt="After cleaning"
-                    fill
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                    style={{ objectFit: "cover" }}
-                    placeholder="blur"
-                    blurDataURL={blurDataUrls.default}
-                  />
-                  <div className="absolute top-2 left-2 bg-green-500 text-white text-xs py-1 px-2 rounded">AFTER</div>
-                </div>
+              <div className="relative h-64 w-full">
+                <Image
+                  src="/images/gallery/custom-1.svg"
+                  alt="Professional Duct Cleaning"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 300px"
+                  style={{ objectFit: "contain" }}
+                />
               </div>
               <div className="p-4">
                 <h3 className="font-bold text-texas-blue">Air Duct Cleaning</h3>
-                <p className="text-gray-700 text-sm">McKinney, TX</p>
+                <p className="text-gray-700 text-sm">Professional Service</p>
               </div>
             </div>
             <div className="bg-texas-cream rounded-xl overflow-hidden shadow-lg">
-              <div className="grid grid-cols-2">
-                <div className="relative h-48">
-                  <Image
-                    src="/images/before-2.png"
-                    alt="Before cleaning"
-                    fill
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                    style={{ objectFit: "cover" }}
-                    placeholder="blur"
-                    blurDataURL={blurDataUrls.default}
-                  />
-                  <div className="absolute top-2 left-2 bg-red-500 text-white text-xs py-1 px-2 rounded">BEFORE</div>
-                </div>
-                <div className="relative h-48">
-                  <Image
-                    src="/images/after-2.png"
-                    alt="After cleaning"
-                    fill
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                    style={{ objectFit: "cover" }}
-                    placeholder="blur"
-                    blurDataURL={blurDataUrls.default}
-                  />
-                  <div className="absolute top-2 left-2 bg-green-500 text-white text-xs py-1 px-2 rounded">AFTER</div>
-                </div>
+              <div className="relative h-64 w-full">
+                <Image
+                  src="/images/gallery/custom-2.svg"
+                  alt="HVAC Maintenance"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 300px"
+                  style={{ objectFit: "contain" }}
+                />
+              </div>
+              <div className="p-4">
+                <h3 className="font-bold text-texas-blue">HVAC Maintenance</h3>
+                <p className="text-gray-700 text-sm">System Optimization</p>
+              </div>
+            </div>
+            <div className="bg-texas-cream rounded-xl overflow-hidden shadow-lg">
+              <div className="relative h-64 w-full">
+                <Image
+                  src="/images/gallery/custom-3.svg"
+                  alt="Dryer Vent Cleaning"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 300px"
+                  style={{ objectFit: "contain" }}
+                />
               </div>
               <div className="p-4">
                 <h3 className="font-bold text-texas-blue">Dryer Vent Cleaning</h3>
-                <p className="text-gray-700 text-sm">Frisco, TX</p>
+                <p className="text-gray-700 text-sm">Fire Prevention</p>
               </div>
             </div>
             <div className="bg-texas-cream rounded-xl overflow-hidden shadow-lg">
-              <div className="grid grid-cols-2">
-                <div className="relative h-48">
-                  <Image
-                    src="/images/before-3.png"
-                    alt="Before cleaning"
-                    fill
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                    style={{ objectFit: "cover" }}
-                    placeholder="blur"
-                    blurDataURL={blurDataUrls.default}
-                  />
-                  <div className="absolute top-2 left-2 bg-red-500 text-white text-xs py-1 px-2 rounded">BEFORE</div>
-                </div>
-                <div className="relative h-48">
-                  <Image
-                    src="/images/after-3.png"
-                    alt="After cleaning"
-                    fill
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                    style={{ objectFit: "cover" }}
-                    placeholder="blur"
-                    blurDataURL={blurDataUrls.default}
-                  />
-                  <div className="absolute top-2 left-2 bg-green-500 text-white text-xs py-1 px-2 rounded">AFTER</div>
-                </div>
+              <div className="relative h-64 w-full">
+                <Image
+                  src="/images/gallery/custom-4.svg"
+                  alt="Chimney Sweeping"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 300px"
+                  style={{ objectFit: "contain" }}
+                />
               </div>
               <div className="p-4">
-                <h3 className="font-bold text-texas-blue">Chimney Cleaning</h3>
-                <p className="text-gray-700 text-sm">Plano, TX</p>
+                <h3 className="font-bold text-texas-blue">Chimney Sweeping</h3>
+                <p className="text-gray-700 text-sm">Safety Inspection</p>
               </div>
             </div>
           </div>
