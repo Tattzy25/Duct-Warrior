@@ -3,21 +3,91 @@
 @tailwind utilities;
 
 :root {
-  --texas-orange: #ff7a00;
-  --texas-blue: #0d3b66;
-  --texas-cream: #f8f4e3;
+  --texas-orange: #ff6600;
+  --texas-blue: #003366;
+  --texas-cream: #f2f2f2;
 }
 
 @layer base {
+  html {
+    font-size: 16px;
+  }
+
   body {
     @apply bg-texas-cream text-texas-blue;
+    font-size: 1.05rem;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display font-bold;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  h4 {
+    @apply text-xl md:text-2xl;
+  }
+
+  .text-highlight {
+    @apply text-texas-orange;
+  }
+
+  .bg-highlight {
+    @apply bg-texas-orange text-white;
   }
 }
 
+/* Card Styles */
+.warrior-card {
+  @apply bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300;
+  border-radius: 12px;
+}
+
+.warrior-card:hover {
+  @apply shadow-xl transform -translate-y-1;
+}
+
+/* Button Styles */
+.btn-primary {
+  @apply bg-texas-orange text-white font-bold py-3 px-6 rounded-lg transition-all hover:bg-texas-orange/90 hover:shadow-lg;
+}
+
+.btn-secondary {
+  @apply bg-white text-texas-orange border-2 border-texas-orange font-bold py-3 px-6 rounded-lg transition-all hover:bg-texas-orange/10;
+}
+
+.btn-battle {
+  @apply bg-texas-blue text-white font-bold py-3 px-6 rounded-lg transition-all hover:bg-texas-blue/90 hover:shadow-lg;
+}
+
+/* Form Styles */
+.form-input {
+  @apply w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-texas-orange;
+}
+
+.form-label {
+  @apply block text-gray-700 font-medium mb-2;
+}
+
 .neumorphic-card {
-  border-radius: 39px;
-  background: linear-gradient(145deg, #e6de05, #ffff05);
-  box-shadow: 45px 45px 90px #ada803, -45px -45px 90px #ffff07;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #e6e6e6, #ffffff);
+  box-shadow: 8px 8px 16px #d1d1d1, -8px -8px 16px #ffffff;
 }
 
 .hero-video-container {
@@ -46,7 +116,7 @@
   align-items: center;
   text-align: center;
   color: white;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 51, 102, 0.7);
   padding: 2rem;
 }
 
@@ -84,7 +154,7 @@
 }
 
 .texas-shadow {
-  box-shadow: 0 10px 25px -5px rgba(255, 122, 0, 0.3);
+  box-shadow: 0 10px 25px -5px rgba(255, 102, 0, 0.3);
 }
 
 .pricing-card {
@@ -260,4 +330,56 @@
   border-radius: 10px;
 }
 
-/* Removed the ::before pseudo-element that was displaying the text */
+/* Trust Badge Styles */
+.trust-badge {
+  @apply flex flex-col items-center justify-center p-3 bg-white rounded-lg shadow-md text-center;
+}
+
+.trust-badge img {
+  @apply w-12 h-12 mb-2;
+}
+
+.trust-badge p {
+  @apply text-sm font-bold text-texas-blue;
+}
+
+/* Battle Section Styles */
+.battle-section {
+  @apply relative py-16 bg-texas-blue text-white overflow-hidden;
+}
+
+.battle-section::before {
+  content: "";
+  @apply absolute inset-0 bg-cover bg-center opacity-20;
+  background-image: url("/images/battle-bg.jpg");
+}
+
+.battle-content {
+  @apply relative z-10 container mx-auto px-4;
+}
+
+/* Responsive Grid */
+.responsive-grid {
+  @apply grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 640px) {
+  .btn-primary,
+  .btn-secondary,
+  .btn-battle {
+    @apply py-2 px-4 text-base;
+  }
+
+  .form-input {
+    @apply py-2;
+  }
+
+  .trust-badge {
+    @apply p-2;
+  }
+
+  .trust-badge img {
+    @apply w-10 h-10;
+  }
+}

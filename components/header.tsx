@@ -18,7 +18,7 @@ export default function Header() {
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center space-x-2">
             <div className="relative h-12 w-48">
-              <Image src="/images/logo.png" alt="DUCTWARRIORS Logo" fill style={{ objectFit: "contain" }} priority />
+              <Image src="/images/texas.svg" alt="DUCTWARRIORS Logo" fill style={{ objectFit: "contain" }} priority />
             </div>
           </Link>
 

@@ -59,12 +59,12 @@
     "vaul": "^0.9.6",
     "zod": "^3.24.1",
     "@supabase/supabase-js": "latest",
-    "ai": "latest",
-    "@ai-sdk/groq": "latest",
-    "@ai-sdk/openai": "latest",
     "@supabase/auth-helpers-nextjs": "latest",
     "@supabase/ssr": "latest",
-    "mapbox-gl": "latest"
+    "mapbox-gl": "latest",
+    "ai": "latest",
+    "@ai-sdk/groq": "latest",
+    "@ai-sdk/openai": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",

@@ -7,23 +7,18 @@ export default function Hero() {
       </video>
       <div className="hero-content">
         <h1 className="text-4xl md:text-6xl font-bold mb-4 font-display">
-          Dirty Air Ducts? We've Got You Covered in McKinney, TX!
+          Breathe Like a Champion — McKinney's #1 <span className="text-texas-orange">Duct Cleaning Warriors</span>.
         </h1>
         <p className="text-xl md:text-2xl mb-8 max-w-3xl">
-          Expert Air Duct Cleaning Services in McKinney, TX, and Surrounding Areas
+          Since 2010, we've helped 3,500+ families <span className="font-bold">fight back against dirty air</span>. Now
+          it's your turn.
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
-          <a
-            href="/contact"
-            className="bg-texas-orange hover:bg-texas-blue text-white font-bold py-3 px-8 rounded-full text-xl transition-all transform hover:scale-105"
-          >
-            Get a Free Estimate
+          <a href="#waitlist" className="btn-primary text-xl flex items-center justify-center">
+            Join the Clean Air Movement
           </a>
-          <a
-            href="/services"
-            className="bg-white hover:bg-texas-cream text-texas-blue font-bold py-3 px-8 rounded-full text-xl transition-all transform hover:scale-105"
-          >
-            Our Services
+          <a href="#battle-plan" className="btn-secondary text-xl flex items-center justify-center">
+            See Our Battle Plan
           </a>
         </div>
       </div>

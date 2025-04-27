@@ -4,7 +4,20 @@ import type React from "react"
 
 import { useChat } from "ai/react"
 import { useState, useRef, useEffect } from "react"
-import { Bot, Send, User, X, Loader2, Maximize, Minimize, RefreshCw } from "lucide-react"
+import {
+  Bot,
+  Send,
+  User,
+  X,
+  Loader2,
+  Maximize,
+  Minimize,
+  RefreshCw,
+  Calendar,
+  Users,
+  UserCog,
+  Package,
+} from "lucide-react"
 import { useAuth } from "@/context/auth-context"
 
 export default function DuctDaddyAI() {
@@ -12,10 +25,11 @@ export default function DuctDaddyAI() {
   const [isOpen, setIsOpen] = useState(false)
   const [isMinimized, setIsMinimized] = useState(false)
   const [retryCount, setRetryCount] = useState(0)
+  const [showQuickActions, setShowQuickActions] = useState(true)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading, error, reload } = useChat({
+  const { messages, input, handleInputChange, handleSubmit, isLoading, error, reload, setInput } = useChat({
     api: "/api/duct-daddy-ai",
     initialMessages: [
       {
@@ -51,10 +65,18 @@ How can I help you today?`,
     }
   }, [messages, isOpen, isMinimized])
 
+  // Hide quick actions after the first user message
+  useEffect(() => {
+    if (messages.filter((m) => m.role === "user").length > 0) {
+      setShowQuickActions(false)
+    }
+  }, [messages])
+
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (input.trim()) {
       setRetryCount(0) // Reset retry count on new message
+      setShowQuickActions(false) // Hide quick actions when user sends a message
       handleSubmit(e)
     }
   }
@@ -72,6 +94,39 @@ How can I help you today?`,
     setRetryCount((prev) => prev + 1)
     reload()
   }
+
+  const handleQuickAction = (action: string) => {
+    setInput(action)
+    inputRef.current?.focus()
+  }
+
+  const quickActions = [
+    {
+      text: "Tell me about your services",
+      icon: <Bot className="h-4 w-4 mr-2" />,
+      color: "bg-texas-blue",
+    },
+    {
+      text: "I'd like to schedule an appointment",
+      icon: <Calendar className="h-4 w-4 mr-2" />,
+      color: "bg-texas-orange",
+    },
+    {
+      text: "Add me to the waitlist",
+      icon: <Users className="h-4 w-4 mr-2" />,
+      color: "bg-green-600",
+    },
+    {
+      text: "Help with my account",
+      icon: <UserCog className="h-4 w-4 mr-2" />,
+      color: "bg-purple-600",
+    },
+    {
+      text: "Service subscription options",
+      icon: <Package className="h-4 w-4 mr-2" />,
+      color: "bg-red-600",
+    },
+  ]
 
   return (
     <>
@@ -130,6 +185,23 @@ How can I help you today?`,
                     </div>
                   </div>
                 ))}
+
+                {/* Quick action buttons - only show after welcome message and before first user message */}
+                {showQuickActions && messages.length === 1 && (
+                  <div className="flex flex-col space-y-2 mt-4">
+                    {quickActions.map((action, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleQuickAction(action.text)}
+                        className={`${action.color} text-white text-left text-sm rounded-lg p-2 hover:opacity-90 transition-opacity flex items-center`}
+                      >
+                        {action.icon}
+                        {action.text}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
                 {isLoading && (
                   <div className="flex justify-start">
                     <div className="bg-gray-100 text-gray-800 rounded-lg rounded-tl-none max-w-[80%] p-3">

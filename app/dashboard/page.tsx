@@ -98,7 +98,9 @@ export default function Dashboard() {
             <div className="md:w-64 bg-texas-blue text-white p-6">
               <div className="mb-8">
                 <h2 className="text-2xl font-bold">Customer Dashboard</h2>
-                <p className="text-gray-300 text-sm">Welcome, {user.user_metadata.first_name || user.email}</p>
+                <p className="text-gray-300 text-sm">
+                  Hey {user.user_metadata.first_name || "there"}, ready to breathe easier? 🌬️
+                </p>
               </div>
 
               <nav className="space-y-2">
@@ -167,7 +169,7 @@ export default function Dashboard() {
               {activeTab === "overview" && (
                 <div>
                   <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold text-texas-blue">Dashboard Overview</h2>
+                    <h2 className="text-2xl font-bold text-texas-blue">Your Clean Air Command Center 💪</h2>
                     <div className="relative">
                       <Bell className="h-6 w-6 text-gray-500 cursor-pointer hover:text-texas-orange transition-colors" />
                       <span className="absolute -top-1 -right-1 bg-texas-orange text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
@@ -178,7 +180,7 @@ export default function Dashboard() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                     <div className="bg-texas-cream rounded-xl p-6 shadow-md">
-                      <h3 className="text-lg font-bold text-texas-blue mb-2">Next Appointment</h3>
+                      <h3 className="text-lg font-bold text-texas-blue mb-2">Your Next Air Quality Mission</h3>
                       {appointments.length > 0 ? (
                         <>
                           <div className="flex items-center text-gray-700 mb-1">
@@ -201,7 +203,7 @@ export default function Dashboard() {
                     </div>
 
                     <div className="bg-texas-cream rounded-xl p-6 shadow-md">
-                      <h3 className="text-lg font-bold text-texas-blue mb-2">Waitlist Position</h3>
+                      <h3 className="text-lg font-bold text-texas-blue mb-2">Your Battle Position</h3>
                       {waitlistEntry ? (
                         <>
                           <p className="text-3xl font-bold text-texas-orange">#{waitlistEntry.position}</p>
@@ -231,7 +233,7 @@ export default function Dashboard() {
                   </div>
 
                   <div className="bg-white rounded-xl p-6 shadow-md mb-8">
-                    <h3 className="text-lg font-bold text-texas-blue mb-4">Recent Services</h3>
+                    <h3 className="text-lg font-bold text-texas-blue mb-4">Your Victory History</h3>
                     {loading ? (
                       <div className="text-center py-4">Loading service history...</div>
                     ) : serviceRequests.length > 0 ? (
@@ -262,7 +264,9 @@ export default function Dashboard() {
                         </table>
                       </div>
                     ) : (
-                      <p className="text-gray-700 py-4">No service history available</p>
+                      <p className="text-gray-700 py-4">
+                        No battles fought yet! Ready to start your clean air journey?
+                      </p>
                     )}
                   </div>
 

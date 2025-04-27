@@ -31,24 +31,40 @@ export default function AboutPage() {
           <div className="flex flex-col md:flex-row items-center gap-12">
             <div className="md:w-1/2">
               <h2 className="text-4xl font-bold mb-6 text-texas-blue">Our Story</h2>
-              <div className="space-y-4 text-lg">
-                <p>
-                  <span className="font-bold text-texas-orange text-xl">DUCT WARRIORS</span> was born from a simple but
-                  powerful idea: every family deserves to breathe clean air in their home.
-                </p>
-                <p>
-                  Founded in 2010 by Mike Johnson, a 15-year HVAC veteran who was frustrated by the corner-cutting he
-                  witnessed in the industry, our company started with just one truck and a promise: to deliver honest,
-                  thorough duct cleaning with no shortcuts.
-                </p>
-                <p>
-                  That commitment to quality quickly earned us a reputation throughout McKinney and surrounding areas.
-                  What started as a one-man operation has grown into a team of certified technicians, but our founding
-                  principles remain unchanged.
-                </p>
-                <p className="font-bold text-texas-blue">
-                  We're not just cleaning ducts – we're fighting for your family's health, one home at a time.
-                </p>
+              <div className="space-y-6 text-lg">
+                <div>
+                  <p className="font-bold text-texas-blue mb-2">The Origin Story</p>
+                  <p>
+                    <span className="font-bold text-texas-orange text-xl">DUCT WARRIORS</span> was born from a simple
+                    but powerful idea: every family deserves to breathe clean air in their home.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-bold text-texas-blue mb-2">The Founder's Mission</p>
+                  <p>
+                    Mike Johnson, a 15-year HVAC veteran, was fed up with the corner-cutting he witnessed in the
+                    industry.
+                  </p>
+                  <p>
+                    In 2010, he grabbed one truck and made a promise: deliver honest, thorough duct cleaning with zero
+                    shortcuts.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-bold text-texas-blue mb-2">The Growth</p>
+                  <p>
+                    That commitment to quality quickly earned us a reputation throughout McKinney and surrounding areas.
+                  </p>
+                  <p>What started as a one-man crusade has grown into a team of certified clean-air warriors.</p>
+                </div>
+
+                <div className="bg-texas-cream p-4 rounded-lg border-l-4 border-texas-orange mt-6">
+                  <p className="font-bold text-texas-blue text-xl">
+                    We're not just cleaning ducts – we're fighting for your family's health, one home at a time.
+                  </p>
+                </div>
               </div>
               <div className="mt-8">
                 <Link
@@ -57,6 +73,32 @@ export default function AboutPage() {
                 >
                   Join Our Mission <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
+                <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6">
+                  <div className="flex flex-col items-center text-center">
+                    <div className="bg-texas-cream p-3 rounded-full mb-3">
+                      <Image src="/images/epa-certified.png" alt="EPA Certified" width={60} height={60} />
+                    </div>
+                    <p className="font-bold text-texas-blue">EPA Certified</p>
+                  </div>
+                  <div className="flex flex-col items-center text-center">
+                    <div className="bg-texas-cream p-3 rounded-full mb-3">
+                      <Image src="/images/home-advisor.png" alt="HomeAdvisor Pro" width={60} height={60} />
+                    </div>
+                    <p className="font-bold text-texas-blue">HomeAdvisor Pro</p>
+                  </div>
+                  <div className="flex flex-col items-center text-center">
+                    <div className="bg-texas-cream p-3 rounded-full mb-3">
+                      <Image src="/images/elite-service.png" alt="Elite Service" width={60} height={60} />
+                    </div>
+                    <p className="font-bold text-texas-blue">Elite Service</p>
+                  </div>
+                  <div className="flex flex-col items-center text-center">
+                    <div className="bg-texas-cream p-3 rounded-full mb-3">
+                      <Image src="/images/winner.png" alt="Award Winner" width={60} height={60} />
+                    </div>
+                    <p className="font-bold text-texas-blue">Award Winner</p>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="md:w-1/2 relative h-[400px] rounded-lg overflow-hidden shadow-2xl">
@@ -65,6 +107,36 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Mini Testimonials */}
+      <div className="container mx-auto px-4">
+        <div className="mt-16 bg-texas-blue rounded-xl p-8 text-white">
+          <h3 className="text-2xl font-bold mb-6 text-center">What Our Warriors Say</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white bg-opacity-10 p-6 rounded-lg">
+              <p className="italic mb-4">
+                "The Duct Warriors saved my family from allergies! Their thorough cleaning made an immediate
+                difference."
+              </p>
+              <p className="font-bold text-texas-orange">- Karen M., McKinney TX</p>
+            </div>
+            <div className="bg-white bg-opacity-10 p-6 rounded-lg">
+              <p className="italic mb-4">
+                "I couldn't believe how much dust they removed from our system. My kids can finally breathe easier at
+                night."
+              </p>
+              <p className="font-bold text-texas-orange">- James T., Frisco TX</p>
+            </div>
+            <div className="bg-white bg-opacity-10 p-6 rounded-lg">
+              <p className="italic mb-4">
+                "Professional, on-time, and incredibly thorough. These guys are the real deal when it comes to air
+                quality."
+              </p>
+              <p className="font-bold text-texas-orange">- Sarah L., Allen TX</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Values Section */}
       <section className="py-20 bg-white">
@@ -160,12 +232,7 @@ export default function AboutPage() {
             {/* Team Member 4 */}
             <div className="bg-white bg-opacity-10 p-6 rounded-lg text-center transform transition-all hover:scale-105">
               <div className="relative h-64 w-64 mx-auto mb-6 rounded-full overflow-hidden">
-                <Image
-                  src="/placeholder.svg?height=256&width=256&query=professional male hvac technician headshot"
-                  alt="Carlos Rodriguez"
-                  fill
-                  style={{ objectFit: "cover" }}
-                />
+                <Image src="/focused-hvac-tech.png" alt="Carlos Rodriguez" fill style={{ objectFit: "cover" }} />
               </div>
               <h3 className="text-2xl font-bold mb-2 text-texas-orange">Carlos Rodriguez</h3>
               <p className="text-lg mb-4">HVAC Technician</p>

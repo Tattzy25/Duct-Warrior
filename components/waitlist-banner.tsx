@@ -3,24 +3,25 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { ArrowUp } from "lucide-react"
+import { ArrowUp, Shield, Award } from "lucide-react"
 import { joinWaitlist } from "@/app/actions/waitlist"
 import { useAuth } from "@/context/auth-context"
 import { createClientSupabaseClient } from "@/lib/supabase/client"
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 export default function WaitlistBanner() {
-  const { user } = useAuth()
+  const router = useRouter()
+  const { user, signUp } = useAuth()
   const [position, setPosition] = useState(1344)
+  const [peopleAfterYou, setPeopleAfterYou] = useState(87)
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [showBumpModal, setShowBumpModal] = useState(false)
-  const [bumpAmount, setBumpAmount] = useState(25)
+  const [bumpAmount, setBumpAmount] = useState(20)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    phone: "",
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formError, setFormError] = useState("")
@@ -48,7 +49,7 @@ export default function WaitlistBanner() {
     const interval = setInterval(
       () => {
         const increase = Math.floor(Math.random() * 5) + 1
-        setPosition((prev) => prev + increase)
+        setPeopleAfterYou((prev) => prev + increase)
       },
       Math.floor(Math.random() * 5000) + 10000,
     )
@@ -63,7 +64,6 @@ export default function WaitlistBanner() {
         firstName: user.user_metadata.first_name || "",
         lastName: user.user_metadata.last_name || "",
         email: user.email || "",
-        phone: user.user_metadata.phone || "",
       })
     }
   }, [user])
@@ -80,11 +80,28 @@ export default function WaitlistBanner() {
     setFormSuccess("")
 
     try {
+      // If user is not logged in, create an account
+      if (!user) {
+        // Generate a random password
+        const randomPassword =
+          Math.random().toString(36).slice(-10) + Math.random().toString(36).toUpperCase().slice(-2) + "!1"
+
+        // Create user account
+        const { error: signUpError } = await signUp(formData.email, randomPassword, {
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          full_name: `${formData.firstName} ${formData.lastName}`,
+        })
+
+        if (signUpError) {
+          throw new Error(signUpError.message)
+        }
+      }
+
       const formDataObj = new FormData()
       formDataObj.append("firstName", formData.firstName)
       formDataObj.append("lastName", formData.lastName)
       formDataObj.append("email", formData.email)
-      formDataObj.append("phone", formData.phone)
 
       if (user) {
         formDataObj.append("userId", user.id)
@@ -102,14 +119,19 @@ export default function WaitlistBanner() {
         if (result.id) {
           setWaitlistId(result.id)
         }
+
+        // Redirect to dashboard
+        setTimeout(() => {
+          router.push("/dashboard")
+        }, 2000)
       } else {
         setFormError(result.message)
         if (result.position) {
           setPosition(result.position)
         }
       }
-    } catch (error) {
-      setFormError("An unexpected error occurred. Please try again.")
+    } catch (error: any) {
+      setFormError(error.message || "An unexpected error occurred. Please try again.")
     } finally {
       setIsSubmitting(false)
     }
@@ -159,7 +181,7 @@ export default function WaitlistBanner() {
 
   const getBumpPrice = () => {
     switch (bumpAmount) {
-      case 25:
+      case 20:
         return 25
       case 50:
         return 45
@@ -171,40 +193,34 @@ export default function WaitlistBanner() {
   }
 
   return (
-    <div className="waitlist-banner w-full" id="waitlist">
-      <div className="container mx-auto px-4 py-3 relative z-10">
+    <div className="waitlist-banner w-full bg-gradient-to-r from-texas-blue to-texas-blue-700" id="waitlist">
+      <div className="container mx-auto px-4 py-5 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div>
-            <span className="font-bold text-xl">Your Waitlist Position: </span>
-            <span className="text-3xl font-bold"># {position}</span>
+            <span className="font-bold text-xl text-white">
+              <Shield className="inline-block mr-2 h-5 w-5" /> Your Battle Position:
+            </span>
+            <span className="text-3xl font-bold text-texas-orange">#{position}</span>
+            <span className="ml-2 text-sm font-medium text-white">({peopleAfterYou} warriors behind you)</span>
             <span className="ml-2 bg-white text-texas-orange px-2 py-1 rounded-full text-sm font-bold">
-              30% OFF for Waitlist Customers!
+              30% OFF for Waitlist Warriors!
             </span>
           </div>
 
           <div className="mt-4 md:mt-0 flex flex-wrap gap-2">
             {!isLoggedIn ? (
-              user ? (
-                <button
-                  onClick={() => setShowLoginModal(true)}
-                  className="bg-white text-texas-orange hover:bg-texas-orange hover:text-white px-4 py-2 rounded-full font-bold transition-colors"
-                >
-                  Join Waitlist
-                </button>
-              ) : (
-                <Link
-                  href="/auth/signin"
-                  className="bg-white text-texas-orange hover:bg-texas-orange hover:text-white px-4 py-2 rounded-full font-bold transition-colors"
-                >
-                  Sign In to Join
-                </Link>
-              )
+              <button
+                onClick={() => setShowLoginModal(true)}
+                className="bg-texas-orange hover:bg-texas-orange/80 text-white font-bold py-3 px-6 rounded-full transition-colors flex items-center"
+              >
+                <Award className="mr-2 h-5 w-5" /> Join the Battle
+              </button>
             ) : (
               <button
                 onClick={() => setShowBumpModal(true)}
-                className="bg-white text-texas-orange hover:bg-texas-orange hover:text-white px-4 py-2 rounded-full font-bold transition-colors flex items-center"
+                className="bg-white hover:bg-gray-100 text-texas-blue font-bold py-3 px-6 rounded-full transition-colors flex items-center"
               >
-                <ArrowUp className="mr-1 h-4 w-4" /> Bump Your Position
+                <ArrowUp className="mr-1 h-4 w-4" /> Advance Your Position
               </button>
             )}
           </div>
@@ -215,9 +231,9 @@ export default function WaitlistBanner() {
       {showLoginModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl p-6 max-w-md w-full">
-            <h3 className="text-2xl font-bold text-texas-blue mb-4">Join Our Waitlist</h3>
+            <h3 className="text-2xl font-bold text-texas-blue mb-4">Join Our Clean Air Battalion</h3>
             <p className="mb-4 text-gray-700">
-              Sign up to reserve your spot on our waitlist and get 30% OFF your next service!
+              Sign up to reserve your spot in our elite waitlist and get 30% OFF your next service!
             </p>
 
             {formError && (
@@ -278,27 +294,13 @@ export default function WaitlistBanner() {
                 />
               </div>
 
-              <div>
-                <label htmlFor="phone" className="block text-gray-700 font-medium mb-1">
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-texas-orange"
-                />
-              </div>
-
               <div className="flex justify-between pt-2">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-texas-orange text-white px-4 py-2 rounded-lg font-bold hover:bg-texas-blue transition-colors disabled:opacity-50"
+                  className="bg-texas-orange hover:bg-texas-blue text-white font-bold py-2 px-6 rounded-lg transition-colors disabled:opacity-50"
                 >
-                  {isSubmitting ? "Submitting..." : "Join Waitlist"}
+                  {isSubmitting ? "Submitting..." : "Join the Battle"}
                 </button>
                 <button
                   type="button"
@@ -317,8 +319,10 @@ export default function WaitlistBanner() {
       {showBumpModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl p-6 max-w-md w-full">
-            <h3 className="text-2xl font-bold text-texas-blue mb-4">Bump Your Position</h3>
-            <p className="mb-4 text-gray-700">Pay to move up spots in our waitlist! Get your service faster.</p>
+            <h3 className="text-2xl font-bold text-texas-blue mb-4">Advance Your Battle Position</h3>
+            <p className="mb-4 text-gray-700">
+              Gain tactical advantage! Move ahead in our waitlist and get your service faster.
+            </p>
 
             {formError && (
               <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
@@ -327,24 +331,24 @@ export default function WaitlistBanner() {
             )}
 
             <div className="mb-4">
-              <label className="block text-gray-700 font-medium mb-2">Select Amount</label>
+              <label className="block text-gray-700 font-medium mb-2">Select Your Advance Strategy</label>
               <select
                 value={bumpAmount}
                 onChange={(e) => setBumpAmount(Number(e.target.value))}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-texas-orange"
               >
-                <option value={25}>25 spots - $25</option>
-                <option value={50}>50 spots - $45</option>
-                <option value={100}>100 spots - $80</option>
+                <option value={20}>Tactical Advance: 20 spots - $25</option>
+                <option value={50}>Strategic Advance: 50 spots - $45</option>
+                <option value={100}>Elite Advance: 100 spots - $80</option>
               </select>
             </div>
             <div className="flex justify-between">
               <button
                 onClick={handleBumpSpot}
                 disabled={isSubmitting}
-                className="bg-texas-orange text-white px-4 py-2 rounded-lg font-bold hover:bg-texas-blue transition-colors disabled:opacity-50"
+                className="bg-texas-orange hover:bg-texas-blue text-white font-bold py-2 px-6 rounded-lg transition-colors disabled:opacity-50"
               >
-                {isSubmitting ? "Processing..." : "Pay & Bump Position"}
+                {isSubmitting ? "Processing..." : "Execute Advance"}
               </button>
               <button
                 onClick={() => setShowBumpModal(false)}

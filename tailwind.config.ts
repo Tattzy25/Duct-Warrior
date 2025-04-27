@@ -52,9 +52,9 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        "texas-orange": "#FF7A00",
-        "texas-blue": "#0D3B66",
-        "texas-cream": "#F8F4E3",
+        "texas-orange": "#FF6600",
+        "texas-blue": "#003366",
+        "texas-cream": "#F2F2F2",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -62,8 +62,8 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-inter)"],
-        display: ["var(--font-oswald)"],
+        sans: ["var(--font-open-sans)", "system-ui", "sans-serif"],
+        display: ["var(--font-montserrat)", "system-ui", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {

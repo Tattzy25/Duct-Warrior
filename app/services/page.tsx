@@ -109,47 +109,97 @@ export default function ServicesPage() {
         </div>
 
         <div className="space-y-16">
-          {services.map((service) => (
-            <div key={service.id} className="bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col lg:flex-row">
-              <div className="lg:w-1/3 relative">
-                <div className="h-64 lg:h-full relative">
-                  <Image
-                    src={service.image || "/placeholder.svg"}
-                    alt={service.title}
-                    fill
-                    style={{ objectFit: "cover" }}
-                    className="transition-transform duration-500 hover:scale-105"
-                  />
+          {services.map((service) => {
+            // Define heroic headlines and subheadlines for each service
+            const heroicHeadlines = {
+              "air-duct-cleaning": {
+                headline: "Clean Air, Healthier Home.",
+                subheadline: "Our 22-point duct cleansing attack removes 99.9% of allergens and dust.",
+              },
+              "attic-insulation": {
+                headline: "Comfort Above, Savings Below.",
+                subheadline: "Shield your home from extreme temperatures and slash energy bills by up to 30%.",
+              },
+              "chimney-sweeping": {
+                headline: "Fire Safety, Peace of Mind.",
+                subheadline: "Eliminate dangerous creosote buildup and prevent the #1 cause of home fires.",
+              },
+              "dryer-vent-services": {
+                headline: "Faster Drying, Fire Prevention.",
+                subheadline: "Cut drying time in half while eliminating the hidden fire hazard in your laundry room.",
+              },
+              "fireplace-services": {
+                headline: "Cozy Warmth, Maximum Safety.",
+                subheadline: "Restore your fireplace to peak performance with our comprehensive maintenance.",
+              },
+              "hvac-maintenance": {
+                headline: "Efficiency Unleashed, Breakdowns Prevented.",
+                subheadline: "Extend your system's life by years while cutting energy costs every month.",
+              },
+            }
+
+            const headline = heroicHeadlines[service.id]?.headline || service.title
+            const subheadline = heroicHeadlines[service.id]?.subheadline || service.description
+
+            return (
+              <div key={service.id} className="bg-white rounded-3xl shadow-xl overflow-hidden">
+                <div className="relative">
+                  <div className="h-64 relative">
+                    <Image
+                      src={service.image || "/placeholder.svg"}
+                      alt={service.title}
+                      fill
+                      style={{ objectFit: "cover" }}
+                      className="transition-transform duration-500 hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                    <div className="absolute bottom-0 left-0 p-6 text-white">
+                      <h2 className="text-3xl font-bold mb-2">{service.title}</h2>
+                      <div className="flex items-baseline">
+                        <span className="text-3xl font-bold text-texas-orange">{service.price}</span>
+                        {service.priceUnit && <span className="ml-1 text-sm">{service.priceUnit}</span>}
+                        <span className="ml-2 text-sm">starting at</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-8">
+                  <div className="bg-texas-cream p-6 rounded-xl mb-8">
+                    <h3 className="text-2xl font-bold mb-2 text-texas-blue">{headline}</h3>
+                    <p className="text-lg text-gray-700">{subheadline}</p>
+                  </div>
+
+                  <div className="mb-8">
+                    <h3 className="text-xl font-bold mb-4 text-texas-blue">The Warrior Advantage</h3>
+                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {service.benefits.map((benefit, index) => (
+                        <li key={index} className="flex items-start bg-gray-50 p-3 rounded-lg">
+                          <span className="text-texas-orange mr-2 text-xl">✓</span>
+                          <span className="font-medium">{benefit}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Link
+                      href={`/services/${service.id}`}
+                      className="inline-flex items-center justify-center bg-texas-orange hover:bg-texas-blue text-white font-bold py-3 px-6 rounded-full transition-colors flex-1"
+                    >
+                      See Before & After <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
+                    <Link
+                      href="/contact"
+                      className="inline-flex items-center justify-center border-2 border-texas-blue text-texas-blue hover:bg-texas-blue hover:text-white font-bold py-3 px-6 rounded-full transition-colors flex-1"
+                    >
+                      Get a Free Inspection
+                    </Link>
+                  </div>
                 </div>
               </div>
-              <div className="lg:w-2/3 p-8 lg:p-12">
-                <h2 className="text-3xl font-bold mb-4 text-texas-blue">{service.title}</h2>
-                <div className="flex items-baseline mb-6">
-                  <span className="text-3xl font-bold text-texas-orange">{service.price}</span>
-                  {service.priceUnit && <span className="ml-1 text-sm text-gray-600">{service.priceUnit}</span>}
-                  <span className="ml-2 text-sm text-gray-600">starting at</span>
-                </div>
-                <p className="text-gray-700 mb-6">{service.description}</p>
-
-                <h3 className="text-xl font-bold mb-4 text-texas-blue">Benefits</h3>
-                <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-8">
-                  {service.benefits.map((benefit, index) => (
-                    <li key={index} className="flex items-start">
-                      <span className="text-texas-orange mr-2">✓</span>
-                      <span>{benefit}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Link
-                  href={`/services/${service.id}`}
-                  className="inline-flex items-center bg-texas-orange hover:bg-texas-blue text-white font-bold py-3 px-6 rounded-full transition-colors"
-                >
-                  Learn More <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
 
         <div className="mt-16 bg-white rounded-3xl shadow-xl p-8 lg:p-12">

@@ -1,6 +1,9 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Phone, Mail, MapPin, Clock, Facebook, Twitter, Instagram } from "lucide-react"
+import { Facebook, Twitter, Instagram, Shield } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -13,7 +16,7 @@ export default function Footer() {
             <div className="mb-6">
               <Link href="/" className="inline-block">
                 <div className="relative h-12 w-48 bg-white rounded-lg p-2">
-                  <Image src="/images/logo.png" alt="DUCTWARRIORS Logo" fill style={{ objectFit: "contain" }} />
+                  <Image src="/images/texas.svg" alt="DUCTWARRIORS Logo" fill style={{ objectFit: "contain" }} />
                 </div>
               </Link>
             </div>
@@ -41,41 +44,45 @@ export default function Footer() {
                 <Instagram className="h-5 w-5" />
               </a>
             </div>
+            <div className="mt-6 p-4 bg-texas-orange bg-opacity-20 rounded-lg border border-texas-orange border-opacity-30 flex items-center">
+              <Shield className="h-6 w-6 mr-2 text-texas-orange" />
+              <p className="font-bold text-white text-center">100% Warrior Guarantee</p>
+            </div>
           </div>
 
           <div>
-            <h3 className="text-xl font-bold mb-6">Quick Links</h3>
+            <h3 className="text-xl font-bold mb-6">Battle Stations</h3>
             <ul className="space-y-4">
               <li>
                 <Link href="/" className="hover:text-texas-orange transition-colors">
-                  Home
+                  Home Base
                 </Link>
               </li>
               <li>
                 <Link href="/services" className="hover:text-texas-orange transition-colors">
-                  Services
+                  Our Arsenal
                 </Link>
               </li>
               <li>
                 <Link href="/pricing" className="hover:text-texas-orange transition-colors">
-                  Pricing
+                  Mission Costs
                 </Link>
               </li>
               <li>
                 <Link href="/about" className="hover:text-texas-orange transition-colors">
-                  About Us
+                  The Warriors
                 </Link>
               </li>
               <li>
                 <Link href="/contact" className="hover:text-texas-orange transition-colors">
-                  Contact
+                  Command Center
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-xl font-bold mb-6">Services</h3>
+            <h3 className="text-xl font-bold mb-6">Air Defense Missions</h3>
             <ul className="space-y-4">
               <li>
                 <Link href="/services/air-duct-cleaning" className="hover:text-texas-orange transition-colors">
@@ -106,29 +113,33 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-xl font-bold mb-6">Contact Info</h3>
-            <ul className="space-y-4">
-              <li className="flex items-start">
-                <Phone className="h-5 w-5 mr-3 text-texas-orange flex-shrink-0" />
-                <span>(123) 456-7890</span>
-              </li>
-              <li className="flex items-start">
-                <Mail className="h-5 w-5 mr-3 text-texas-orange flex-shrink-0" />
-                <span>info@ductwarriors.com</span>
-              </li>
-              <li className="flex items-start">
-                <MapPin className="h-5 w-5 mr-3 text-texas-orange flex-shrink-0" />
-                <span>123 Main Street, McKinney, TX 75070</span>
-              </li>
-              <li className="flex items-start">
-                <Clock className="h-5 w-5 mr-3 text-texas-orange flex-shrink-0" />
-                <div>
-                  <p>Mon-Fri: 8:00 AM - 6:00 PM</p>
-                  <p>Sat: 9:00 AM - 4:00 PM</p>
-                  <p>Sun: Closed</p>
-                </div>
-              </li>
-            </ul>
+            <h3 className="text-xl font-bold mb-4">Ready to Fight for Clean Air?</h3>
+            <p className="mb-4">Schedule your first strike against dirty air today!</p>
+            <form className="space-y-3">
+              <div>
+                <Input
+                  type="text"
+                  placeholder="Your Name"
+                  className="bg-white/10 border-white/20 placeholder:text-white/50 text-white"
+                />
+              </div>
+              <div>
+                <Input
+                  type="tel"
+                  placeholder="Your Phone"
+                  className="bg-white/10 border-white/20 placeholder:text-white/50 text-white"
+                />
+              </div>
+              <div>
+                <Textarea
+                  placeholder="Battle Plan Details"
+                  className="bg-white/10 border-white/20 placeholder:text-white/50 text-white h-20"
+                />
+              </div>
+              <Button type="submit" className="w-full bg-texas-orange hover:bg-texas-orange/80 text-white">
+                Deploy Warriors
+              </Button>
+            </form>
           </div>
         </div>
 

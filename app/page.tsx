@@ -8,6 +8,8 @@ import ContactForm from "@/components/contact-form"
 import WaitlistBanner from "@/components/waitlist-banner"
 import ImageGalleryCarousel from "@/components/image-gallery-carousel"
 import WhyUsSection from "@/components/why-us-section"
+import TrustIndicators from "@/components/trust-indicators"
+import ServiceLocations from "@/components/service-locations"
 import Link from "next/link"
 import Image from "next/image"
 import { blurDataUrls } from "@/lib/image-optimization"
@@ -43,6 +45,7 @@ export default function Home() {
       <WaitlistBanner />
       <WhyUsSection />
       <Services />
+      <TrustIndicators />
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
@@ -151,6 +154,7 @@ export default function Home() {
       </div>
 
       <Pricing />
+      <ServiceLocations />
       <Certifications />
       <Testimonials />
 
